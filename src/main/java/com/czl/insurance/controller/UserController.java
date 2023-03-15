@@ -118,6 +118,12 @@ public class UserController {
             queryWrapper.like("address",address);
         }
         queryWrapper.orderByDesc("id");
+
+        //获取当前用户信息
+        /*User currentUser = TokenUtils.getCurrentUser();
+        System.out.println("获取当前用户信息==============================" + currentUser.getNickname());*/
+
+
         return Result.success(userService.page(new Page<>(pageNum, pageSize),queryWrapper));
     }
 
