@@ -15,6 +15,6 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-file:
+files:
   upload:
     path: F:/BYSJ/files/

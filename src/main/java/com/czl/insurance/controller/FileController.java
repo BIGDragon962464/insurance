@@ -2,16 +2,22 @@ package com.czl.insurance.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import com.czl.insurance.entity.Files;
+import com.czl.insurance.mapper.FileMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.events.Event;
 
+import javax.annotation.Resource;
+import javax.naming.directory.SearchResult;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 
 /**
@@ -21,8 +27,11 @@ import java.io.IOException;
 @RequestMapping("/file")
 public class FileController {
 
-    @Value("$ {files.upload.path}")
+    @Value("${files.upload.path}")
     private String fileUploadPath;
+
+    @Resource
+    private FileMapper fileMapper;
 
     /**
      * 文件上传接口
@@ -43,13 +52,44 @@ public class FileController {
         }
         //定义一个文件唯一的标识码
         String uuid = IdUtil.fastSimpleUUID();
-        File uploadFile = new File(fileUploadPath + uuid);
+        String fileUuid = uuid + StrUtil.DOT + type;
+        File uploadFile = new File(fileUploadPath + fileUuid);
         //把获取到的文件存储到磁盘目录
         file.transferTo(uploadFile);
+
+        String url = "http://localhost:8088/file/"+ fileUuid;
         //存储数据库
-        return "";
+        Files saveFile = new Files();
+        saveFile.setName(originalFilename);
+        saveFile.setType(type);
+        saveFile.setSize(size/1024);
+        saveFile.setUrl(url);
+        fileMapper.insert(saveFile);
+        return url;
     }
 
+
+    /**
+     * 文件下载接口
+     * @param fileUuid
+     * @param response
+     * @throws IOException
+     */
+
+    @GetMapping("/{fileUUID}")
+    public void download(@PathVariable String fileUuid, HttpServletResponse response) throws IOException {
+        //根据文件的唯一标识码获取文件
+        File uploadFile = new File(fileUploadPath + fileUuid);
+        //设置输出流格式
+        ServletOutputStream os = response.getOutputStream();
+        response.addHeader("Content-Disposition","attachment;filename=" + URLEncoder.encode(fileUuid + "UTF-8"));
+        response.setContentType("application/octet-stream");
+
+        //读取文件的字节流
+        os.write(FileUtil.readBytes(uploadFile));
+        os.flush();
+        os.close();
+    }
 
 
 }
