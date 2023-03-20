@@ -10,6 +10,7 @@ import com.czl.insurance.mapper.UserMapper;
 import com.czl.insurance.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.czl.insurance.utils.TokenUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return one;
     }
 
-    private User getUserInfo(UserDTO userDTO){
+    private User getUserInfo(@NotNull UserDTO userDTO){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username",userDTO.getUsername());
         queryWrapper.eq("password",userDTO.getPassword());
