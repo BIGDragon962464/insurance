@@ -14,6 +14,7 @@ public class Files {
     private String type;
     private Long size;
     private String url;
+    private String md5;
     private Boolean isDelete;
     private Boolean enable;
 }
