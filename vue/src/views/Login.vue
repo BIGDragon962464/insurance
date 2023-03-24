@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <div style="margin: 200px auto; background-color: #fff; width: 350px; height: 300px; padding: 20px; border-radius: 10px">
+  <div class="wrapper" >
+    <div style="margin: 200px auto; background-color: rgba(255,255,255,0.83); width: 350px; height: 300px; padding: 20px; border-radius: 20px">
       <div style="margin: 20px 0; text-align: center; font-size: 24px"><b>登 录</b></div>
       <el-form :model="user" :rules="rules" ref="userForm">
         <el-form-item prop="username">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import router, {setRouters} from "@/router";
+import router, {setRoutes} from "@/router";
 
 export default {
   name: "Login",
@@ -51,7 +51,7 @@ export default {
               localStorage.setItem("menus",JSON.stringify(res.data.menus))
 
               //动态设置当前用户路由
-              setRouters()
+              setRoutes()
               this.$router.push("/")
               this.$message.success("登录成功！")
             } else {
@@ -69,8 +69,10 @@ export default {
 
 <style>
 .wrapper {
-  height: 100vh;
-  background-image: linear-gradient(to bottom right, #FC466B , #3F5EFB);
-  overflow: hidden;
+  background: url("~@/assets/background.png");
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 120%;
 }
 </style>

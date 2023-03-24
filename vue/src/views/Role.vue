@@ -250,13 +250,16 @@ export default {
         this.checks = res.data
 
         this.request.get("/menu/ids").then(r => {
+          //先渲染弹窗里的元素
+          this.menuDialogVisible = true;
+
           const ids = r.data
           ids.forEach(id => {
             if (!this.checks.includes(id)) {
-              this.$refs.tree.setChecked(id,false)
+              //this.$refs.tree.setChecked(id,false)
+              this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
             }
           })
-          this.menuDialogVisible = true;
         })
       })
     },

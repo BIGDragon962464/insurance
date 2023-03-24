@@ -2,6 +2,8 @@ package com.czl.insurance.mapper;
 
 import com.czl.insurance.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.czl.insurance.entity.dto.UserPasswordDTO;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    @Update("update bysj_user set password = #{newPassword} where username = #{username} and password = #{password}")
+    int updatePassword(UserPasswordDTO userPasswordDTO);
 }

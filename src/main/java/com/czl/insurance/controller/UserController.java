@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.common.Constants;
 import com.czl.insurance.common.Result;
 import com.czl.insurance.entity.dto.UserDTO;
+import com.czl.insurance.entity.dto.UserPasswordDTO;
 import com.czl.insurance.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -125,6 +126,17 @@ public class UserController {
 
 
         return Result.success(userService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
+    /**
+     * 修改密码
+     * @param userPasswordDTO
+     * @return
+     */
+    @PostMapping("/password")
+    public Result password(@RequestBody UserPasswordDTO userPasswordDTO) {
+        userService.updatePassword(userPasswordDTO);
+        return Result.success();
     }
 
     /**

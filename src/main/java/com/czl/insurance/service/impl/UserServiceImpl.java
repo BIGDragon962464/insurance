@@ -7,6 +7,7 @@ import com.czl.insurance.common.Constants;
 import com.czl.insurance.entity.Menu;
 import com.czl.insurance.entity.User;
 import com.czl.insurance.entity.dto.UserDTO;
+import com.czl.insurance.entity.dto.UserPasswordDTO;
 import com.czl.insurance.exception.ServiceException;
 import com.czl.insurance.mapper.RoleMapper;
 import com.czl.insurance.mapper.RoleMenuMapper;
@@ -43,6 +44,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private RoleMenuMapper roleMenuMapper;
 
     @Resource
+    private UserMapper userMapper;
+
+    @Resource
     private IMenuService menuService;
 
     @Override
@@ -75,6 +79,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new ServiceException(Constants.CODE_600,"用户已存在");
         }
         return one;
+    }
+
+    @Override
+    public void updatePassword(UserPasswordDTO userPasswordDTO){
+        int update = userMapper.updatePassword(userPasswordDTO);
+        if (update < 1 ) {
+            throw new ServiceException(Constants.CODE_600, "密码错误");
+        }
     }
 
     private User getUserInfo(@NotNull UserDTO userDTO){

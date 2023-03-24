@@ -3,6 +3,7 @@ package com.czl.insurance.service;
 import com.czl.insurance.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.czl.insurance.entity.dto.UserDTO;
+import com.czl.insurance.entity.dto.UserPasswordDTO;
 
 /**
  * <p>
@@ -17,4 +18,6 @@ public interface IUserService extends IService<User> {
     UserDTO login(UserDTO userDTO);
 
     User register(UserDTO userDTO);
+
+    void updatePassword(UserPasswordDTO userPasswordDTO);
 }
