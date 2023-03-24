@@ -3,6 +3,9 @@ package com.czl.insurance.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +16,8 @@ import java.io.Serializable;
  * @author 曹子龙
  * @since 2023-03-22
  */
+@Getter
+@Setter
 @TableName("bysj_role")
 public class Role implements Serializable {
 
@@ -34,7 +39,12 @@ public class Role implements Serializable {
      */
       private String description;
 
-    
+    /**
+     * 唯一标识
+     */
+    private String flag;
+
+
     public Integer getId() {
         return id;
     }

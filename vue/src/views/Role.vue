@@ -33,10 +33,11 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="150"></el-table-column>
       <el-table-column prop="name" label="名称" width="200"></el-table-column>
-      <el-table-column prop="description" label="描述" width="600"></el-table-column>
+      <el-table-column prop="flag" label="唯一标识" width="200"></el-table-column>
+      <el-table-column prop="description" label="描述" width="400"></el-table-column>
       <el-table-column label="操作" align="center">
         <template v-slot="scope">
-          <el-button type="info" @click="selectMenu(scope.row.id)"><i class="el-icon-menu"> 分配菜单</i></el-button>
+          <el-button type="info" @click="selectMenu(scope.row)"><i class="el-icon-menu"> 分配菜单</i></el-button>
           <el-button type="success" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i> 编辑</el-button>
           <el-popconfirm
               class="ml-5"
@@ -71,6 +72,9 @@
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="form.description" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="唯一标识">
+          <el-input v-model="form.flag" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -122,6 +126,7 @@ export default {
       expends: [],
       checks: [],
       roleId: 0,
+      roleFlag: '',
     }
   },
   created() {
@@ -160,6 +165,12 @@ export default {
         if (res.code === '200'){
           this.$message.success("绑定成功")
           this.menuDialogVisible = false
+
+          //操作管理员角色后需要重新登录
+          if (this.roleFlag === 'ROLE_ADMIN'){
+            this.$store.commit("logout")
+          }
+
         }else {
           this.$message.error(res.message)
         }
@@ -222,22 +233,31 @@ export default {
       this.pageNum = pageNum
       this.load()
     },
-    selectMenu(roleId){
+    selectMenu(role){
       this.menuDialogVisible = true
-      this.roleId = roleId
+      this.roleId = role.id
+      this.roleFlag = role.flag
 
       //请求菜单数据
       this.request.get("/menu").then(res => {
-        console.log(res.data)
         this.menuData = res.data
 
         //把后台返回的菜单数据处理成id数组
         this.expends = this.menuData.map(v => v.id)
       })
 
-
-      this.request.get("/role/roleMenu/" + roleId).then(res => {
+      this.request.get("/role/roleMenu/" + role.id).then(res => {
         this.checks = res.data
+
+        this.request.get("/menu/ids").then(r => {
+          const ids = r.data
+          ids.forEach(id => {
+            if (!this.checks.includes(id)) {
+              this.$refs.tree.setChecked(id,false)
+            }
+          })
+          this.menuDialogVisible = true;
+        })
       })
     },
 

@@ -3,6 +3,8 @@ package com.czl.insurance.service;
 import com.czl.insurance.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -12,5 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-03-22
  */
 public interface IMenuService extends IService<Menu> {
+
+    List<Menu> findMenus(String name);
 
 }

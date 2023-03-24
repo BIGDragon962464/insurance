@@ -32,9 +32,10 @@
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"
               row-key="id" default-expand-all @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="ID" width="80"></el-table-column>
+      <el-table-column prop="id" label="ID" width="150"></el-table-column>
       <el-table-column prop="name" label="名称" width="140"></el-table-column>
       <el-table-column prop="path" label="路径" width="140"></el-table-column>
+      <el-table-column prop="pagePath" label="页面路径" width="140"></el-table-column>
       <el-table-column label="图标" width="140">
         <template slot-scope="scope">
           <i style="font-size: 18px" :class="scope.row.icon"/>
@@ -67,6 +68,9 @@
         </el-form-item>
         <el-form-item label="路径">
           <el-input v-model="form.path" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="页面路径">
+          <el-input v-model="form.pagePath" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="图标">
           <el-select clearable v-model="form.icon" placeholder="请选择" style="width: 100%">
