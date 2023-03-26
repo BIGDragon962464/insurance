@@ -119,6 +119,12 @@ public class FileController {
         return filesList.size() == 0 ? null : filesList.get(0);
     }
 
+
+    @GetMapping("/front/all")
+    public Result frontAll() {
+        return Result.success(fileMapper.selectList(null));
+    }
+
     @PostMapping("/update")
     public Result update(@RequestBody Files files) {
         return Result.success(fileMapper.updateById(files));
