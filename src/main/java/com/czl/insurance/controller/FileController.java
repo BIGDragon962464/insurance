@@ -1,16 +1,21 @@
 package com.czl.insurance.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.czl.insurance.common.Constants;
 import com.czl.insurance.common.Result;
 import com.czl.insurance.entity.Files;
 import com.czl.insurance.mapper.FileMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +39,11 @@ public class FileController {
 
     @Resource
     private FileMapper fileMapper;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+
 
     /**
      * 文件上传接口
@@ -81,6 +91,8 @@ public class FileController {
         saveFile.setMd5(md5);
         fileMapper.insert(saveFile);
 
+        flushRedis(Constants.FILES_KEY);
+
         return url;
     }
 
@@ -122,12 +134,26 @@ public class FileController {
 
     @GetMapping("/front/all")
     public Result frontAll() {
-        return Result.success(fileMapper.selectList(null));
+        //1.从缓存存取数据
+        String jsonStr = stringRedisTemplate.opsForValue().get(Constants.FILES_KEY);
+        List<Files> files;
+        if (StrUtil.isBlank(jsonStr)){//2.取出json是空
+            files = fileMapper.selectList(null);//3.从数据库取出数据
+            //4.再去缓存到redis
+            stringRedisTemplate.opsForValue().set(Constants.FILES_KEY,JSONUtil.toJsonStr(files));
+        }else {
+            //5.如果有，从redis中获取数据
+            files = JSONUtil.toBean(jsonStr, new TypeReference<List<Files>>() {
+            }, true);
+        }
+        return Result.success(files);
     }
 
     @PostMapping("/update")
     public Result update(@RequestBody Files files) {
-        return Result.success(fileMapper.updateById(files));
+        fileMapper.updateById(files);
+        flushRedis(Constants.FILES_KEY);
+        return Result.success();
     }
 
     @DeleteMapping("/{id}")
@@ -135,6 +161,7 @@ public class FileController {
         Files files = fileMapper.selectById(id);
         files.setIsDelete(true);
         fileMapper.updateById(files);
+        flushRedis(Constants.FILES_KEY);
         return Result.success();
     }
 
@@ -173,5 +200,9 @@ public class FileController {
         return Result.success(fileMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
+
+    private void flushRedis(String key){
+        stringRedisTemplate.delete(key);
+    }
 
 }

@@ -1,9 +1,11 @@
 <template>
   <div>
     <div style="margin: 10px 0">
-      <el-input style="width: 200px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="name"></el-input>
+      <el-input style="width: 200px"  placeholder="请输入保险类型" suffix-icon="el-icon-search" v-model="types"></el-input>
+      <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
+      <el-input class="ml-5" style="width: 200px"  placeholder="价格" suffix-icon="el-icon-position" v-model="price"></el-input>
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
-      <el-button type="warning" @click="reset">重置</el-button>
+      <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
     </div>
     <div style="margin: 10px 0">
       <el-upload action="http://localhost:8088/file/upload"
@@ -24,26 +26,25 @@
       >
         <el-button type="danger" slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
       </el-popconfirm>
-
     </div>
+
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="80"></el-table-column>
-      <el-table-column prop="name" label="文件名称"></el-table-column>
-      <el-table-column prop="type" label="文件类型"></el-table-column>
-      <el-table-column prop="size" label="文件大小(kb)"></el-table-column>
-      <el-table-column label="下载">
-        <template slot-scope="scope">
-          <el-button type="primary" @click="download(scope.row.url)">下载</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="启用">
-        <template slot-scope="scope">
-          <el-switch v-model="scope.row.enable" active-color="#13ce66" inactive-color="#ccc" @change="changeEnable(scope.row)"></el-switch>
-        </template>
-      </el-table-column>
+      <el-table-column prop="name" label="保险名称"></el-table-column>
+      <el-table-column prop="price" label="保险价格"></el-table-column>
+      <el-table-column prop="img" label="保险图片"></el-table-column>
+      <el-table-column prop="types" label="保险类型" :filters="[{ text: '人身意外险', value: '人身意外险' },
+                       { text: '机动车辆险', value: '机动车辆险' },
+                       { text: '医疗养老险', value: '医疗养老险' },
+                       { text: '工商责任险', value: '工商责任险' },]"
+                       :filter-method="filterTag"
+                       filter-placement="bottom-end"
+
+      ></el-table-column>
       <el-table-column label="操作"  width="200" align="center">
         <template slot-scope="scope">
+          <el-button type="success"><i class="el-icon-edit"></i>编辑</el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
@@ -81,6 +82,8 @@ export default {
     return {
       tableData: [],
       name: '',
+      types: '',
+      price: null,
       multipleSelection: [],
       pageNum: 1,
       pageSize: 8,
@@ -92,11 +95,13 @@ export default {
   },
   methods: {
     load() {
-      this.request.get("/file/page", {
+      this.request.get("/insurance/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: this.name,
+          types: this.types,
+          price: this.price,
         }
       }).then(res => {
 
@@ -113,14 +118,14 @@ export default {
       return isLt2M;
     },*/
     changeEnable(row) {
-      this.request.post("/file/update", row).then(res => {
+      this.request.post("/insurance/update", row).then(res => {
         if (res.code === '200') {
           this.$message.success("操作成功")
         }
       })
     },
     del(id) {
-      this.request.delete("/file/" + id).then(res => {
+      this.request.delete("/insurance/" + id).then(res => {
         if (res.code === '200') {
           this.$message.success("删除成功")
           this.load()
@@ -135,7 +140,7 @@ export default {
     },
     delBatch() {
       let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
-      this.request.post("/file/del/batch", ids).then(res => {
+      this.request.post("/insurance/del/batch", ids).then(res => {
         if (res.code === '200') {
           this.$message.success("批量删除成功")
           this.load()
@@ -144,8 +149,10 @@ export default {
         }
       })
     },
-    reset() {
+    reset(){
       this.name = ""
+      this.types = ""
+      this.price = ""
       this.load()
     },
     handleSizeChange(pageSize) {
@@ -165,7 +172,10 @@ export default {
     },
     download(url) {
       window.open(url)
-    }
+    },
+    filterTag(value, row) {
+      return row.tag === value;
+    },
   }
 }
 </script>
