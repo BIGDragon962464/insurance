@@ -35,6 +35,12 @@ public class InsuranceController {
         return Result.success();
     }
 
+    @PostMapping("/buyInsurance/{userId}/{insuranceId}")
+    public Result buyInsurance(@PathVariable Integer userId ,@PathVariable Integer insuranceId){
+        insuranceService.setBuyInsurance(userId,insuranceId);
+        return Result.success();
+    }
+
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         insuranceService.removeById(id);

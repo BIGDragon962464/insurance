@@ -20,43 +20,43 @@ const routes = [
     name: '404',
     component: () => import('../views/404.vue')
   },
-    {
-        path: '/front',
-        name: 'Front',
-        component: () => import('../views/front/Front.vue'),
-        children: [
-          {
-            path: 'home',
-            name: 'FrontHome',
-            component: () => import('../views/front/Home.vue')
-          },
-          {
-            path: 'item1',
-            name: 'Item1',
-            component: () => import('../views/front/Item1.vue')
-          },
-          {
-            path: 'person',
-            name: 'FrontPerson',
-            component: () => import('../views/front/Person.vue')
-          },
-          {
-            path: 'about',
-            name: 'About',
-            component: () => import('../views/front/About.vue')
-          },
-          {
-            path: 'claims',
-            name: 'Claims',
-            component: () => import('../views/front/Claims.vue')
-          },
-          {
-            path: 'join',
-            name: 'Join',
-            component: () => import('../views/front/Join.vue')
-          },
-        ]
-    },
+  {
+    path: '/front',
+    name: 'Front',
+    component: () => import('../views/front/Front.vue'),
+    children: [
+        {
+          path: 'home',
+          name: 'FrontHome',
+          component: () => import('../views/front/Home.vue')
+        },
+      {
+        path: 'item1',
+        name: 'Item1',
+        component: () => import('../views/front/Item1.vue')
+      },
+      {
+        path: 'person',
+        name: 'FrontPerson',
+        component: () => import('../views/front/Person.vue')
+      },
+      {
+        path: 'about',
+        name: 'About',
+        component: () => import('../views/front/About.vue')
+      },
+      {
+        path: 'claims',
+        name: 'Claims',
+        component: () => import('../views/front/Claims.vue')
+      },
+      {
+        path: 'join',
+        name: 'Join',
+        component: () => import('../views/front/Join.vue')
+      },
+    ]
+  },
 ]
 
 const router = new VueRouter({
@@ -96,11 +96,11 @@ export const setRoutes = () => {
       }
     })
       //获取当前的路由对象名称数组
-    const currentRouteNames = router.getRoutes().map(v => v.name)
+    /*const currentRouteNames = router.getRoutes().map(v => v.name)
     if (!currentRouteNames.includes('Manage')) {
       // 动态添加到现在的路由对象中去
-      router.addRoute(manageRoute)
-    }
+    }*/
+    router.addRoute(manageRoute)
   }
 }
 
@@ -128,7 +128,7 @@ router.beforeEach((to, from, next) => {
   if (!to.matched.length) {
     const storeMenus = localStorage.getItem("menus")
     if (storeMenus) {
-      next("/404")
+      next("/front/home")
     }else {
       next("/login")
     }

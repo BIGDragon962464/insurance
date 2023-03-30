@@ -3,6 +3,7 @@ package com.czl.insurance.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.common.Constants;
 import com.czl.insurance.entity.Menu;
 import com.czl.insurance.entity.User;
@@ -87,6 +88,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (update < 1 ) {
             throw new ServiceException(Constants.CODE_600, "密码错误");
         }
+    }
+
+    @Override
+    public Page<User> findPage(Page<User> page, String username, String nickname, String address) {
+        return userMapper.findPage(page, username, nickname, address);
     }
 
     private User getUserInfo(@NotNull UserDTO userDTO){

@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.czl.insurance.mapper.InsuranceMapper">
 
+    <delete id="deleteBuyInsurance">
+        delete from bysj_user_insurance where user_id = #{userId} and insurance_id = #{insuranceId}
+
+    </delete>
+    <select id="findPage" resultType="com.czl.insurance.entity.User"></select>
+    <update id="setBuyInsurance">
+        insert into bysj_user_insurance(user_id, insurance_id) values(#{userId}, #{insuranceId})
+    </update>
+
 </mapper>

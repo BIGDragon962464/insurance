@@ -1,20 +1,13 @@
 <template>
   <div>
     <div style="margin: 10px 0">
-      <el-input style="width: 200px"  placeholder="请输入保险类型" suffix-icon="el-icon-search" v-model="types"></el-input>
       <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
       <el-input class="ml-5" style="width: 200px"  placeholder="价格" suffix-icon="el-icon-position" v-model="price"></el-input>
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-upload action="http://localhost:8088/file/upload"
-                 :show-file-list="false"
-                 :on-success="handleFileUploadSuccess"
-                 style="display: inline-block"
-      >
-        <el-button type="primary" class="ml-5">上传文件 <i class="el-icon-top"></i></el-button>
-      </el-upload>
+      <el-button type="primary" @click="handleAdd" v-if="user.role === 'ROLE_ADMIN'"><i class="el-icon-circle-plus-outline"></i> 新增</el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -24,27 +17,33 @@
           title="您确定批量删除这些数据吗？"
           @confirm="delBatch"
       >
-        <el-button type="danger" slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
+        <el-button type="danger" slot="reference" v-if="user.role === 'ROLE_ADMIN'">批量删除 <i class="el-icon-remove-outline"></i></el-button>
       </el-popconfirm>
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="80"></el-table-column>
-      <el-table-column prop="name" label="保险名称"></el-table-column>
-      <el-table-column prop="price" label="保险价格"></el-table-column>
-      <el-table-column prop="img" label="保险图片"></el-table-column>
-      <el-table-column prop="types" label="保险类型" :filters="[{ text: '人身意外险', value: '人身意外险' },
-                       { text: '机动车辆险', value: '机动车辆险' },
-                       { text: '医疗养老险', value: '医疗养老险' },
-                       { text: '工商责任险', value: '工商责任险' },]"
-                       :filter-method="filterTag"
-                       filter-placement="bottom-end"
-
-      ></el-table-column>
-      <el-table-column label="操作"  width="200" align="center">
+      <el-table-column prop="name" label="保险名称" width="200"></el-table-column>
+      <el-table-column prop="img" label="保险图片">
         <template slot-scope="scope">
-          <el-button type="success"><i class="el-icon-edit"></i>编辑</el-button>
+          　<img :src="scope.row.img" class="img"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="description" label="描述"></el-table-column>
+      <el-table-column prop="price" label="保险价格" width="150"></el-table-column>
+      <el-table-column prop="types" label="保险类型" >
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.types === 'PRE'">人身意外险</el-tag>
+          <el-tag type="success" v-if="scope.row.types === 'CAR'">机动车辆险</el-tag>
+          <el-tag type="info" v-if="scope.row.types === 'MED'">医疗养老险</el-tag>
+          <el-tag type="warning" v-if="scope.row.types === 'INJ'">工伤责任险</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作"  width="300" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary"   @click="buyInsurance(scope.row.id)"><i class="el-icon-edit"></i>加入购物车</el-button>
+          <el-button type="success" v-if="user.role === 'ROLE_ADMIN'" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
@@ -54,12 +53,11 @@
               title="您确定删除吗？"
               @confirm="del(scope.row.id)"
           >
-            <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
+            <el-button type="danger" slot="reference" v-if="user.role === 'ROLE_ADMIN'">删除 <i class="el-icon-remove-outline"></i></el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
-
     <div style="padding: 10px 0">
       <el-pagination
           @size-change="handleSizeChange"
@@ -71,44 +69,135 @@
           :total="total">
       </el-pagination>
     </div>
+    <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="30%">
+      <el-form label-width="80px" size="small">
+        <el-form-item label="保险名称">
+          <el-input v-model="form.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="保险图片">
+          <el-upload
+              class="avatar-uploader"
+              action="http://localhost:8088/file/upload"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+          >
+            <img v-if="form.img" :src="form.img" class="img">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="保险价格">
+          <el-input v-model="form.price" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="form.description" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="保险种类">
+          <el-select clearable v-model="form.types" placeholder="请选择" style="width: 100%">
+            <el-option v-for="item in types" :key="item.types" :label="item.types" :value="item.flag"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="save">确 定</el-button>
+      </div>
+    </el-dialog>
 
+    <el-dialog title="购物车" :visible.sync="vis" width="50%">
+      <el-table :data="insurance" border stripe>
+        <el-table-column prop="name" label="保险名称"></el-table-column>
+        <el-table-column prop="price" label="保险价格"></el-table-column>
+        <el-table-column prop="img" label="保险图片"></el-table-column>
+        <el-table-column prop="types" label="保险类型"></el-table-column>
+        <el-table-column prop="description" label="保险描述"></el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <div style="margin-bottom: 1px; margin-left: 1200px" >
+        <el-button @click="lookInsurance" size="medium" type="success" icon="el-icon-shopping-cart-2" circle></el-button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "File",
+  name: "Insurance",
   data() {
     return {
       tableData: [],
+      form:{},
       name: '',
       types: '',
       price: null,
       multipleSelection: [],
+      dialogFormVisible: false,
       pageNum: 1,
-      pageSize: 8,
-      total: 0
+      pageSize: 5,
+      total: 0,
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      insurance: [],
+      vis: false,
     }
   },
   created() {
     this.load()
   },
   methods: {
+    lookInsurance (){
+      this.vis = true
+    },
     load() {
       this.request.get("/insurance/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: this.name,
-          types: this.types,
           price: this.price,
+          types: this.types,
         }
       }).then(res => {
-
+        console.log(this.user.id)
         this.tableData = res.data.records
         this.total = res.data.total
 
       })
+      this.request.get("/types").then(res => {
+        this.types=res.data
+      })
+    },
+
+    handleAdd(){
+      this.dialogFormVisible = true
+      this.form = {}
+    },
+    save(){
+      this.request.post("/insurance",this.form).then(res => {
+        if (res.code === '200'){
+          this.$message.success("保存成功！")
+          this.dialogFormVisible = false
+        }else {
+          this.$message.error("保存失败")
+        }
+        this.load()
+      })
+    },
+    cancel() {
+      this.dialogFormVisible=false
+      this.load()
+    },
+    buyInsurance(insuranceId){
+      this.request.post('/insurance/buyInsurance/' + this.user.id + "/" + insuranceId).then(res => {
+        if (res.code === '200') {
+          this.$message.success("已加入购物车")
+        }else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    handleEdit(row){
+      //this.form = row
+      this.form = Object.assign({},row) // 将row拷贝到空对象中 解决没点确定数据改变的问题
+      this.dialogFormVisible = true
     },
     /*beforeAvatarUpload(res) {
       const isLt2M = res.size / 1024 / 1024 < 2;
@@ -173,13 +262,38 @@ export default {
     download(url) {
       window.open(url)
     },
-    filterTag(value, row) {
-      return row.tag === value;
+    handleAvatarSuccess(res) {
+      this.form.img = res
     },
   }
 }
 </script>
 
 <style scoped>
-
+.avatar-uploader {
+  padding-bottom: 5px;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 30px;
+  color: #8c939d;
+  width: 70px;
+  height: 70px;
+  line-height: 80px;
+  text-align: center;
+}
+.img {
+  width: 70px;
+  height: 70px;
+  display: block;
+}
 </style>

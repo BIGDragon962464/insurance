@@ -33,7 +33,12 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="150"></el-table-column>
       <el-table-column prop="name" label="名称" width="200"></el-table-column>
-      <el-table-column prop="flag" label="唯一标识" width="200"></el-table-column>
+      <el-table-column prop="flag" label="唯一标识" width="200">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.flag === 'ROLE_ADMIN'">管理员</el-tag>
+          <el-tag type="success" v-if="scope.row.flag === 'ROLE_USER'">用户</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="description" label="描述" width="400"></el-table-column>
       <el-table-column label="操作" align="center">
         <template v-slot="scope">
@@ -53,7 +58,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="padding: 10px 0">
+<!--    <div style="padding: 10px 0">
       <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -63,7 +68,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
-    </div>
+    </div>-->
 
     <el-dialog title="角色信息" :visible.sync="dialogFormVisible" width="30%">
       <el-form label-width="80px" size="small">
@@ -107,7 +112,7 @@
 
 <script>
 export default {
-  name: "User",
+  name: "Role",
   data(){
     return{
       name: "",

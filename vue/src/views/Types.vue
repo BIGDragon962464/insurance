@@ -58,7 +58,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="padding: 10px 0">
+<!--    <div style="padding: 10px 0">
       <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -68,7 +68,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
-    </div>
+    </div>-->
 
     <el-dialog title="角色信息" :visible.sync="dialogFormVisible" width="30%">
       <el-form label-width="80px" size="small">

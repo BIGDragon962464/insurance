@@ -63,7 +63,7 @@
 
 <script>
 export default {
-  name: "Person",
+  name: "FrontPerson",
   data() {
     return {
       form: {},
@@ -98,9 +98,8 @@ export default {
     save() {
       this.request.post("/user", this.form).then(res => {
         if (res.code === '200') {
-          this.$message.success("保存成功")
+          this.$message.success("保存成功,请重新登录同步数据")
           //触发父级更新User的方法
-
           this.$emit("refreshUser")
 
         } else {

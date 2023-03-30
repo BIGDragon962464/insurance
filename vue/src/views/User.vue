@@ -35,14 +35,20 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="80"></el-table-column>
       <el-table-column prop="username" label="用户名" width="140"></el-table-column>
-      <el-table-column prop="role" label="角色"></el-table-column>
+      <el-table-column prop="role" label="角色">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.role === 'ROLE_ADMIN'">管理员</el-tag>
+          <el-tag type="success" v-if="scope.row.role === 'ROLE_USER'">用户</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="nickname" label="姓名" width="120"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
       <el-table-column prop="phone" label="电话"></el-table-column>
       <el-table-column prop="address" label="地址"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="300" align="center">
         <template v-slot="scope">
-          <el-button type="success" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
+<!--          <el-button type="primary" @click="lookInsurance(scope.row.insurance)" ><i class="el-icon-document"></i> 查看保险</el-button>-->
+          <el-button type="success" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i> 编辑</el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
@@ -52,7 +58,7 @@
               title="您确定删除吗？"
               @confirm="del(scope.row.id)"
           >
-            <el-button type="danger" slot="reference"><i class="el-icon-remove-outline"></i>删除</el-button>
+            <el-button type="danger" slot="reference"><i class="el-icon-remove-outline"></i> 删除</el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -97,6 +103,17 @@
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
+
+
+<!--    <el-dialog title="购物车" :visible.sync="vis" width="50%">
+      <el-table :data="insurance" border stripe>
+        <el-table-column prop="name" label="保险名称"></el-table-column>
+        <el-table-column prop="price" label="保险价格"></el-table-column>
+        <el-table-column prop="img" label="保险图片"></el-table-column>
+        <el-table-column prop="types" label="保险类型"></el-table-column>
+        <el-table-column prop="description" label="保险描述"></el-table-column>
+      </el-table>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -116,12 +133,19 @@ export default {
       pageNum: 1,
       pageSize: 8,
       roles: [],
+      /*insurance: [],
+      vis: false,*/
     }
   },
   created() {
     this.load()
   },
   methods: {
+    /*lookInsurance(insurance){
+      console.log(insurance)
+      this.insurance = insurance
+      this.vis = true
+    },*/
     load(){
       //请求分页查询
       /*fetch("http://localhost:8088/user/page?pageNum= "+ this.pageNum+"&pageSize=" + this.pageSize + "&username=" + this.username)

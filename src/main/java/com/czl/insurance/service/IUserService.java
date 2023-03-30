@@ -1,5 +1,6 @@
 package com.czl.insurance.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.czl.insurance.entity.dto.UserDTO;
@@ -20,4 +21,6 @@ public interface IUserService extends IService<User> {
     User register(UserDTO userDTO);
 
     void updatePassword(UserPasswordDTO userPasswordDTO);
+
+    Page<User> findPage(Page<User> page, String username, String nickname, String address);
 }

@@ -1,6 +1,7 @@
 package com.czl.insurance.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -50,5 +52,9 @@ public class Insurance implements Serializable {
      * 保险种类
      */
       private String types;
+
+      private String description;
+
+
 
 }
