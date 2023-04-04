@@ -17,4 +17,5 @@ public interface IInsuranceService extends IService<Insurance> {
 
     void setBuyInsurance(Integer userId, Integer insuranceId);
 
+    Page<Insurance> findInsurance(Page<Insurance> page , Integer id);
 }

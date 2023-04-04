@@ -28,11 +28,17 @@ public class InsuranceServiceImpl extends ServiceImpl<InsuranceMapper, Insurance
     private InsuranceMapper insuranceMapper;
 
 
+
     @Transactional
     @Override
     public void setBuyInsurance(Integer userId, Integer insuranceId) {
         insuranceMapper.deleteBuyInsurance(userId,insuranceId);
         insuranceMapper.setBuyInsurance(userId,insuranceId);
+    }
+
+    @Override
+    public Page<Insurance> findInsurance(Page<Insurance> page ,Integer id) {
+        return insuranceMapper.findInsurance(page, id);
     }
 
 }

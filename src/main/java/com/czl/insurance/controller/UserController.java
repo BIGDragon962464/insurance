@@ -108,7 +108,7 @@ public class UserController {
                                @RequestParam (defaultValue = "")String username,
                                @RequestParam (defaultValue = "")String nickname,
                                @RequestParam (defaultValue = "")String address) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        /*QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (!"".equals(username)){
             queryWrapper.like("username",username);
         }
@@ -118,14 +118,14 @@ public class UserController {
         if (!"".equals(address)){
             queryWrapper.like("address",address);
         }
-        queryWrapper.orderByDesc("id");
+        queryWrapper.orderByDesc("id");*/
 
         //获取当前用户信息
         /*User currentUser = TokenUtils.getCurrentUser();
         System.out.println("获取当前用户信息==============================" + currentUser.getNickname());*/
 
 
-        return Result.success(userService.page(new Page<>(pageNum, pageSize),queryWrapper));
+        return Result.success(userService.findPage(new Page<>(pageNum, pageSize),username,nickname,address));
     }
 
     /**

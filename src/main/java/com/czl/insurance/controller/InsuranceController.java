@@ -3,6 +3,7 @@ package com.czl.insurance.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.common.Result;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,6 +41,12 @@ public class InsuranceController {
         insuranceService.setBuyInsurance(userId,insuranceId);
         return Result.success();
     }
+
+    @GetMapping("findInsurance/{id}")
+    public Result findInsurance(Page<Insurance> page, @PathVariable Integer id){
+        return Result.success(insuranceService.findInsurance(page,id));
+    }
+
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {

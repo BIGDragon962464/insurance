@@ -47,7 +47,7 @@
       <el-table-column prop="address" label="地址"></el-table-column>
       <el-table-column label="操作" width="300" align="center">
         <template v-slot="scope">
-<!--          <el-button type="primary" @click="lookInsurance(scope.row.insurance)" ><i class="el-icon-document"></i> 查看保险</el-button>-->
+          <el-button type="primary" @click="lookInsurance(scope.row.insurance)" ><i class="el-icon-document"></i> 查看保险</el-button>
           <el-button type="success" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i> 编辑</el-button>
           <el-popconfirm
               class="ml-5"
@@ -105,7 +105,7 @@
     </el-dialog>
 
 
-<!--    <el-dialog title="购物车" :visible.sync="vis" width="50%">
+   <el-dialog title="购物车" :visible.sync="vis" width="50%">
       <el-table :data="insurance" border stripe>
         <el-table-column prop="name" label="保险名称"></el-table-column>
         <el-table-column prop="price" label="保险价格"></el-table-column>
@@ -113,7 +113,7 @@
         <el-table-column prop="types" label="保险类型"></el-table-column>
         <el-table-column prop="description" label="保险描述"></el-table-column>
       </el-table>
-    </el-dialog>-->
+    </el-dialog>
   </div>
 </template>
 
@@ -133,19 +133,19 @@ export default {
       pageNum: 1,
       pageSize: 8,
       roles: [],
-      /*insurance: [],
-      vis: false,*/
+      insurance: [],
+      vis: false,
     }
   },
   created() {
     this.load()
   },
   methods: {
-    /*lookInsurance(insurance){
+    lookInsurance(insurance){
       console.log(insurance)
       this.insurance = insurance
       this.vis = true
-    },*/
+    },
     load(){
       //请求分页查询
       /*fetch("http://localhost:8088/user/page?pageNum= "+ this.pageNum+"&pageSize=" + this.pageSize + "&username=" + this.username)

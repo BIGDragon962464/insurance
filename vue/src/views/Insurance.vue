@@ -104,7 +104,7 @@
     </el-dialog>
 
     <el-dialog title="购物车" :visible.sync="vis" width="50%">
-      <el-table :data="insurance" border stripe>
+      <el-table :data="findInsurance" border stripe>
         <el-table-column prop="name" label="保险名称"></el-table-column>
         <el-table-column prop="price" label="保险价格"></el-table-column>
         <el-table-column prop="img" label="保险图片"></el-table-column>
@@ -120,6 +120,8 @@
 </template>
 
 <script>
+import insurance from "@/views/Insurance.vue";
+
 export default {
   name: "Insurance",
   data() {
@@ -137,6 +139,7 @@ export default {
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       insurance: [],
       vis: false,
+      findInsurance:[],
     }
   },
   created() {
@@ -144,8 +147,15 @@ export default {
   },
   methods: {
     lookInsurance (){
-      this.vis = true
-    },
+          this.request.get('insurance/findInsurance/'  + this.user.id ).then(res => {
+              //console.log(this.user.id)
+              if (res.code === '200'){
+                  this.vis = true
+              }else {
+                  this.$message.error("错误")
+              }
+          })
+      },
     load() {
       this.request.get("/insurance/page", {
         params: {
@@ -156,7 +166,7 @@ export default {
           types: this.types,
         }
       }).then(res => {
-        console.log(this.user.id)
+        //console.log(this.user)
         this.tableData = res.data.records
         this.total = res.data.total
 

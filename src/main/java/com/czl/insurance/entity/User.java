@@ -78,6 +78,7 @@ public class User implements Serializable {
      */
     private String role;
 
+
     @TableField(exist = false)
     private List<Insurance> insurance;
 
