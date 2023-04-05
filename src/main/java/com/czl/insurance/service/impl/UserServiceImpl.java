@@ -90,11 +90,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
     }
 
-    @Override
-    public Page<User> findPage(Page<User> page, String username, String nickname, String address) {
-        return userMapper.findPage(page, username, nickname, address);
-    }
-
     private User getUserInfo(@NotNull UserDTO userDTO){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username",userDTO.getUsername());

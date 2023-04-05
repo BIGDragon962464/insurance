@@ -56,7 +56,11 @@ public class Insurance implements Serializable {
       private String description;
 
       @TableField(exist = false)
+      private List<Insurance> Insurance;
+
+      @TableField(exist = false)
       private List<Insurance> findInsurance;
+
 
 
 

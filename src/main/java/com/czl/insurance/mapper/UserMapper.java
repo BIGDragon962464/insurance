@@ -20,5 +20,4 @@ public interface UserMapper extends BaseMapper<User> {
     @Update("update bysj_user set password = #{newPassword} where username = #{username} and password = #{password}")
     int updatePassword(UserPasswordDTO userPasswordDTO);
 
-    Page<User> findPage(Page<User> page, @Param("username") String username,@Param("nickname") String nickname,@Param("address") String address);
 }

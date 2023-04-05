@@ -5,6 +5,8 @@ import com.czl.insurance.entity.Insurance;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.czl.insurance.entity.User;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -17,5 +19,5 @@ public interface IInsuranceService extends IService<Insurance> {
 
     void setBuyInsurance(Integer userId, Integer insuranceId);
 
-    Page<Insurance> findInsurance(Page<Insurance> page , Integer id);
+    List<Insurance> findInsurance(Integer id);
 }

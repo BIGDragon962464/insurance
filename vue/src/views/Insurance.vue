@@ -2,12 +2,12 @@
   <div>
     <div style="margin: 10px 0">
       <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
-      <el-input class="ml-5" style="width: 200px"  placeholder="价格" suffix-icon="el-icon-position" v-model="price"></el-input>
+      <el-input class="ml-5" style="width: 200px"  placeholder="种类" suffix-icon="el-icon-position" v-model="types"></el-input>
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="handleAdd" v-if="user.role === 'ROLE_ADMIN'"><i class="el-icon-circle-plus-outline"></i> 新增</el-button>
+      <el-button type="primary" @click="handleAdd"v-if="user.role === 'ROLE_ADMIN'"><i class="el-icon-circle-plus-outline"></i> 新增</el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -21,7 +21,7 @@
       </el-popconfirm>
     </div>
 
-    <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
+    <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"   @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="80"></el-table-column>
       <el-table-column prop="name" label="保险名称" width="200"></el-table-column>
@@ -33,11 +33,11 @@
       <el-table-column prop="description" label="描述"></el-table-column>
       <el-table-column prop="price" label="保险价格" width="150"></el-table-column>
       <el-table-column prop="types" label="保险类型" >
-        <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.types === 'PRE'">人身意外险</el-tag>
-          <el-tag type="success" v-if="scope.row.types === 'CAR'">机动车辆险</el-tag>
-          <el-tag type="info" v-if="scope.row.types === 'MED'">医疗养老险</el-tag>
-          <el-tag type="warning" v-if="scope.row.types === 'INJ'">工伤责任险</el-tag>
+        <template slot-scope="scope" >
+          <el-tag type="primary" v-if="scope.row.types === '人身意外险'">人身意外险</el-tag>
+          <el-tag type="success" v-if="scope.row.types === '机动车辆险'">机动车辆险</el-tag>
+          <el-tag type="info" v-if="scope.row.types === '医疗养老险'">医疗养老险</el-tag>
+          <el-tag type="warning" v-if="scope.row.types === '工伤责任险'">工伤责任险</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作"  width="300" align="center">
@@ -114,7 +114,7 @@
     </el-dialog>
 
     <div style="margin-bottom: 1px; margin-left: 1200px" >
-        <el-button @click="lookInsurance" size="medium" type="success" icon="el-icon-shopping-cart-2" circle></el-button>
+        <el-button @click="lookInsurance(findInsurance)" size="medium" type="success" icon="el-icon-shopping-cart-2" circle></el-button>
     </div>
   </div>
 </template>
@@ -146,16 +146,6 @@ export default {
     this.load()
   },
   methods: {
-    lookInsurance (){
-          this.request.get('insurance/findInsurance/'  + this.user.id ).then(res => {
-              //console.log(this.user.id)
-              if (res.code === '200'){
-                  this.vis = true
-              }else {
-                  this.$message.error("错误")
-              }
-          })
-      },
     load() {
       this.request.get("/insurance/page", {
         params: {
@@ -166,18 +156,15 @@ export default {
           types: this.types,
         }
       }).then(res => {
-        //console.log(this.user)
         this.tableData = res.data.records
         this.total = res.data.total
+      })
 
-      })
-      this.request.get("/types").then(res => {
-        this.types=res.data
-      })
     },
 
     handleAdd(){
       this.dialogFormVisible = true
+      this.type();
       this.form = {}
     },
     save(){
@@ -274,6 +261,24 @@ export default {
     },
     handleAvatarSuccess(res) {
       this.form.img = res
+    },
+    lookInsurance (findInsurance){
+        this.request.get('insurance/findInsurance/'  + this.user.id ).then(r => {
+            //console.log(this.user.id)
+            //console.log(r.data)
+            this.findInsurance = r.data
+            console.log(findInsurance)
+            if (r.code === '200'){
+                this.vis = true
+            }else {
+                this.$message.error("错误")
+            }
+        })
+    },
+    type (){
+      this.request.get("/types").then(res => {
+          this.types=res.data
+      })
     },
   }
 }

@@ -22,6 +22,6 @@ public interface InsuranceMapper extends BaseMapper<Insurance> {
     void setBuyInsurance(@Param("userId")Integer userId, @Param("insuranceId")Integer insuranceId);
     void deleteBuyInsurance(@Param("userId")Integer userId, @Param("insuranceId")Integer insuranceId);
 
-    Page<Insurance> findInsurance(Page<Insurance> page, @Param("id")Integer id);
+    List<Insurance> findInsurance(@Param("id")Integer id);
 
 }

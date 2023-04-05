@@ -37,8 +37,8 @@ public class InsuranceServiceImpl extends ServiceImpl<InsuranceMapper, Insurance
     }
 
     @Override
-    public Page<Insurance> findInsurance(Page<Insurance> page ,Integer id) {
-        return insuranceMapper.findInsurance(page, id);
+    public List<Insurance> findInsurance(Integer id) {
+        return insuranceMapper.findInsurance(id);
     }
 
 }

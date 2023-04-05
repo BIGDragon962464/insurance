@@ -35,10 +35,10 @@
       <el-table-column prop="types" label="类型名称" width="200"></el-table-column>
       <el-table-column prop="flag" label="唯一标识" width="200" >
         <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.flag === 'PER'">人身意外险</el-tag>
-          <el-tag type="success" v-if="scope.row.flag === 'CAR'">机动车辆险</el-tag>
-          <el-tag type="info" v-if="scope.row.flag === 'MED'">医疗养老险</el-tag>
-          <el-tag type="warning" v-if="scope.row.flag === 'INJ'">工商责任险</el-tag>
+          <el-tag type="primary" v-if="scope.row.flag === '人身意外险'">人身意外险</el-tag>
+          <el-tag type="success" v-if="scope.row.flag === '机动车辆险'">机动车辆险</el-tag>
+          <el-tag type="info" v-if="scope.row.flag === '医疗养老险'">医疗养老险</el-tag>
+          <el-tag type="warning" v-if="scope.row.flag === '工伤责任险'">工伤责任险</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">

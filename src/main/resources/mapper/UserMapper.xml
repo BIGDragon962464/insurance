@@ -1,42 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.czl.insurance.mapper.UserMapper">
-    <resultMap id="pageUser" type="com.czl.insurance.entity.User">
-        <result column="id" property="id"/>
-        <result column="username" property="username"/>
-        <result column="nickname" property="nickname"/>
-        <result column="email" property="email"/>
-        <result column="phone" property="phone"/>
-        <result column="address" property="address"/>
-        <result column="create_time" property="createTime"/>
-        <result column="avatar_url" property="avatarUrl"/>
-        <result column="role" property="role"/>
-        <collection property="insurance" javaType="java.util.ArrayList" ofType="com.czl.insurance.entity.Insurance">
-            <result column="name" property="name"/>
-            <result column="price" property="price"/>
-            <result column="img" property="img"/>
-            <result column="types" property="types"/>
-            <result column="description" property="description"/>
-        </collection>
-    </resultMap>
-    
-    <select id="findPage" resultMap="pageUser">
-        select bysj_user.*, bysj_insurance.* from bysj_user
-        left join bysj_user_insurance
-        on bysj_user.id = bysj_user_insurance.user_id
-        left join bysj_insurance
-        on bysj_user_insurance.insurance_id = bysj_insurance.id
-        <where>
-            <if test="username != null and username != ''">
-                and bysj_user.username like concat('%', #{username}, '%')
-            </if>
-            <if test="nickname != null and nickname != ''">
-                and bysj_user.nickname like concat('%', #{nickname}, '%')
-            </if>
-            <if test="address != null and address != ''">
-                and bysj_user.address like concat('%', #{address}, '%')
-            </if>
-        </where>
-    </select>
-
 </mapper>

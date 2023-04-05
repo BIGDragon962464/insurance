@@ -1,9 +1,11 @@
 package com.czl.insurance.controller;
 
 
+import cn.hutool.json.JSONArray;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.common.Result;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class InsuranceController {
 
     @Resource
+    @Autowired
     private IInsuranceService insuranceService;
 
     //新增或更新
@@ -43,8 +46,13 @@ public class InsuranceController {
     }
 
     @GetMapping("findInsurance/{id}")
-    public Result findInsurance(Page<Insurance> page, @PathVariable Integer id){
-        return Result.success(insuranceService.findInsurance(page,id));
+    public Result findInsurance(@PathVariable Integer id){
+        List<Insurance> list = insuranceService.findInsurance(id);
+
+        /*System.out.println("=====================================================================");
+        System.out.println(list);
+        System.out.println("=====================================================================");*/
+        return Result.success(list);
     }
 
 
