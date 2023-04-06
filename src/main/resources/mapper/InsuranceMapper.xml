@@ -5,6 +5,7 @@
     <delete id="deleteBuyInsurance">
         delete from bysj_user_insurance where user_id = #{userId} and insurance_id = #{insuranceId}
     </delete>
+
     <select id="findPage" resultType="com.czl.insurance.entity.User"></select>
 
     <update id="setBuyInsurance">
@@ -12,6 +13,7 @@
     </update>
 
     <resultMap id="pageUser" type="com.czl.insurance.entity.Insurance">
+        <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="price" property="price"/>
         <result column="img" property="img"/>

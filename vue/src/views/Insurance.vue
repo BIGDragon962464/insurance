@@ -38,11 +38,12 @@
           <el-tag type="success" v-if="scope.row.types === '机动车辆险'">机动车辆险</el-tag>
           <el-tag type="info" v-if="scope.row.types === '医疗养老险'">医疗养老险</el-tag>
           <el-tag type="warning" v-if="scope.row.types === '工伤责任险'">工伤责任险</el-tag>
+            <el-tag type="warning" v-if="scope.row.types === '财产保障险'">财产保障险</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作"  width="300" align="center">
         <template slot-scope="scope">
-          <el-button type="primary"   @click="buyInsurance(scope.row.id)"><i class="el-icon-edit"></i>加入购物车</el-button>
+          <el-button type="primary" @click="buyInsurance(scope.row.id)" v-if="user.role === 'ROLE_USER'"><i class="el-icon-edit"></i>加入购物车</el-button>
           <el-button type="success" v-if="user.role === 'ROLE_ADMIN'" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
           <el-popconfirm
               class="ml-5"
@@ -102,20 +103,6 @@
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
-
-    <el-dialog title="购物车" :visible.sync="vis" width="50%">
-      <el-table :data="findInsurance" border stripe>
-        <el-table-column prop="name" label="保险名称"></el-table-column>
-        <el-table-column prop="price" label="保险价格"></el-table-column>
-        <el-table-column prop="img" label="保险图片"></el-table-column>
-        <el-table-column prop="types" label="保险类型"></el-table-column>
-        <el-table-column prop="description" label="保险描述"></el-table-column>
-      </el-table>
-    </el-dialog>
-
-    <div style="margin-bottom: 1px; margin-left: 1200px" >
-        <el-button @click="lookInsurance(findInsurance)" size="medium" type="success" icon="el-icon-shopping-cart-2" circle></el-button>
-    </div>
   </div>
 </template>
 
@@ -159,7 +146,6 @@ export default {
         this.tableData = res.data.records
         this.total = res.data.total
       })
-
     },
 
     handleAdd(){
@@ -262,12 +248,9 @@ export default {
     handleAvatarSuccess(res) {
       this.form.img = res
     },
-    lookInsurance (findInsurance){
+    lookInsurance (){
         this.request.get('insurance/findInsurance/'  + this.user.id ).then(r => {
-            //console.log(this.user.id)
-            //console.log(r.data)
             this.findInsurance = r.data
-            console.log(findInsurance)
             if (r.code === '200'){
                 this.vis = true
             }else {
@@ -284,7 +267,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .avatar-uploader {
   padding-bottom: 5px;
 }

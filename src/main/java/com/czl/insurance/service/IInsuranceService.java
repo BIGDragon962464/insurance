@@ -18,6 +18,7 @@ import java.util.List;
 public interface IInsuranceService extends IService<Insurance> {
 
     void setBuyInsurance(Integer userId, Integer insuranceId);
+    void deleteBuyInsurance(Integer userId, Integer insuranceId);
 
     List<Insurance> findInsurance(Integer id);
 }

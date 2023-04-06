@@ -20,13 +20,6 @@
       >
         <el-button type="danger" slot="reference"><i class="el-icon-remove-outline"></i> 批量删除</el-button>
       </el-popconfirm>
-<!--      <el-upload action="http://localhost:8088/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
-        <el-button type="primary" class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>
-      </el-upload>
-
-
-      <el-button type="primary" @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button>-->
-
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"
@@ -112,13 +105,6 @@ export default {
   },
   methods: {
     load(){
-      //请求分页查询
-      /*fetch("http://localhost:8088/user/page?pageNum= "+ this.pageNum+"&pageSize=" + this.pageSize + "&username=" + this.username)
-          .then(res =>res.json()).then(res => {
-        console.log(res)
-        this.tableData = res.data
-        this.total = res.total
-      })*/
       this.request.get("/menu", {
         params:{
           name: this.name,
@@ -146,11 +132,13 @@ export default {
     },
 
     handleAdd(){
+      this.icon()
       this.dialogFormVisible = true
       this.form = {}
     },
 
     handleAdd2(pid){
+      this.icon()
       this.dialogFormVisible = true
       this.form = {}
       if (pid){
@@ -158,14 +146,10 @@ export default {
       }
     },
     handleEdit(row){
-      //this.form = row
       this.form = Object.assign({},row) // 将row拷贝到空对象中 解决没点确定数据改变的问题
       this.dialogFormVisible = true
+      this.icon()
 
-      //请求图标的数据
-      this.request.get("/menu/icons").then(res => {
-        this.options = res.data
-      })
     },
     del(id){
       this.request.delete("/menu/" + id).then(res => {
@@ -217,6 +201,12 @@ export default {
       console.log(pageNum)
       this.pageNum = pageNum
       this.load()
+    },
+    icon(){
+        //请求图标的数据
+        this.request.get("/menu/icons").then(res => {
+            this.options = res.data
+        })
     },
   }
 }

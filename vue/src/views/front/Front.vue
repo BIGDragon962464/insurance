@@ -63,7 +63,6 @@ export default {
     logout(){
       this.$store.commit("logout")
       this.$message.success("退出成功！")
-      this.$router.push("/front/home")
     },
     upload(){
       this.$router.push("/front/home")

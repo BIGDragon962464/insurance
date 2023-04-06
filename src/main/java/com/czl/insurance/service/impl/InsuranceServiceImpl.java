@@ -32,8 +32,13 @@ public class InsuranceServiceImpl extends ServiceImpl<InsuranceMapper, Insurance
     @Transactional
     @Override
     public void setBuyInsurance(Integer userId, Integer insuranceId) {
-        insuranceMapper.deleteBuyInsurance(userId,insuranceId);
         insuranceMapper.setBuyInsurance(userId,insuranceId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteBuyInsurance(Integer userId, Integer insuranceId) {
+        insuranceMapper.deleteBuyInsurance(userId,insuranceId);
     }
 
     @Override

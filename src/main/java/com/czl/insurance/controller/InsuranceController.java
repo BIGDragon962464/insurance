@@ -45,13 +45,15 @@ public class InsuranceController {
         return Result.success();
     }
 
+    @DeleteMapping("deleteOrder/{userId}/{insuranceId}")
+    public Result deleteBuyInsurance(@PathVariable Integer userId ,@PathVariable Integer insuranceId) {
+        insuranceService.deleteBuyInsurance(userId,insuranceId);
+        return Result.success();
+    }
+
     @GetMapping("findInsurance/{id}")
     public Result findInsurance(@PathVariable Integer id){
         List<Insurance> list = insuranceService.findInsurance(id);
-
-        /*System.out.println("=====================================================================");
-        System.out.println(list);
-        System.out.println("=====================================================================");*/
         return Result.success(list);
     }
 

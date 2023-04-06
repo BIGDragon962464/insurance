@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" >
+<!--  <div class="wrapper" >
     <div style="margin: 200px auto; background-color: rgba(255,255,255,0.83); width: 350px; height: 300px; padding: 20px; border-radius: 20px">
       <div style="margin: 20px 0; text-align: center; font-size: 24px"><b>登 录</b></div>
       <el-form :model="user" :rules="rules" ref="userForm">
@@ -15,7 +15,41 @@
         </el-form-item>
       </el-form>
     </div>
-  </div>
+  </div>-->
+    <div class="box">
+        <div class="content">
+            <div class="login-wrapper">
+                <h1>登录</h1>
+                <div class="login-form">
+                    <el-form :model="user" :rules="rules" ref="userForm">
+                        <div class="username form-item">
+                            <span>用户名</span>
+                            <input type="text" class="input-item" v-model="user.username">
+                        </div>
+                        <div class="password form-item">
+                            <span>密码</span>
+                            <input type="password" class="input-item" v-model="user.password">
+                        </div>
+                        <el-button class="login-btn" @click="login">登 录</el-button>
+                        <a style="font-size: 13px; margin-left: 300px" @click="$router.push('/register')">没有账号？</a>
+                    </el-form>
+                </div>
+                <div class="divider">
+                    <span class="line"></span>
+                    <span class="divider-text">其他方式登录</span>
+                    <span class="line"></span>
+                </div>
+                <div class="other-login-wrapper">
+                    <div class="other-login-item">
+                        <img src="../assets/QQ.png" alt="">
+                    </div>
+                    <div class="other-login-item">
+                        <img src="../assets/WeChat.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -72,7 +106,7 @@ export default {
 }
 </script>
 
-<style>
+<style src="@/css/style.css">
 .wrapper {
   background: url("~@/assets/background.png");
   width:100%;
