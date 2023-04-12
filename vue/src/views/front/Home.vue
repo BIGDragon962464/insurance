@@ -34,12 +34,12 @@ export default {
       files: []
     }
   },
-  created() {
+  /*created() {
     this.request.get("/insurance/front/all").then(res => {
       console.log(res.data)
       this.files = res.data.filter(v => v.type ==='png' || v.type === 'webp' || v.type === 'jpg')
     })
-  },
+  },*/
   methods: {}
 }
 </script>

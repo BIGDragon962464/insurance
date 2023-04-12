@@ -9,13 +9,16 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.common.Constants;
 import com.czl.insurance.common.Result;
+import com.czl.insurance.config.AuthAccess;
 import com.czl.insurance.entity.dto.UserDTO;
 import com.czl.insurance.entity.dto.UserPasswordDTO;
+import com.czl.insurance.exception.ServiceException;
 import com.czl.insurance.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.rowset.serial.SerialException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
@@ -51,6 +54,17 @@ public class UserController {
         UserDTO dto = userService.login(userDTO);
         return Result.success(dto);
     }
+    @AuthAccess
+    @PostMapping("/loginEmail")
+    public Result loginEmail(@RequestBody UserDTO userDTO) {
+        String email = userDTO.getEmail();
+        String code = userDTO.getCode();
+        if (StrUtil.isBlank(email) || StrUtil.isBlank(code)) {
+            return Result.error(Constants.CODE_400,"参数错误");
+        }
+        UserDTO dto = userService.loginEmail(userDTO);
+        return Result.success(dto);
+    }
 
     @Resource
     private IUserService userService;
@@ -84,6 +98,16 @@ public class UserController {
     @GetMapping
     public Result findAll() {
         return Result.success(userService.list());
+    }
+
+    @AuthAccess
+    @GetMapping("/email/{email}")
+    public Result sendEmailCode(@PathVariable String email) {
+        if (StrUtil.isBlank(email)){
+            throw new ServiceException(Constants.CODE_400,"参数错误");
+        }
+        userService.sendEmailCode(email);
+        return Result.success();
     }
 
     @GetMapping("/{id}")

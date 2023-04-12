@@ -1,5 +1,5 @@
 <template>
-<!--  <div class="wrapper">
+  <div class="wrapper">
     <div style="margin: 175px auto; background-color: rgba(255,255,255,0.83); width: 350px; height: 350px; padding: 20px; border-radius: 20px">
       <div style="margin: 20px 0; text-align: center; font-size: 24px"><b>注 册</b></div>
       <el-form :model="user" :rules="rules" ref="userForm">
@@ -18,9 +18,9 @@
         </el-form-item>
       </el-form>
     </div>
-  </div>-->
+  </div>
 
-    <div class="box">
+<!--    <div class="box">
         <div class="content">
             <div class="login-wrapper">
                 <h1>注册</h1>
@@ -39,11 +39,12 @@
                             <input type="password" class="input-item" v-model="user.confirmPassword">
                         </div>
                         <el-button class="login-btn" @click="register">注册并登录</el-button>
+                        <a style="cursor:pointer; font-size: 13px; margin-left: 320px" @click="$router.push('/login')">返回登录</a>
                     </el-form>
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 </template>
 
 <script>
@@ -121,9 +122,9 @@ export default {
 }
 </script>
 
-<style src="@/css/style.css">
+<style >
 .wrapper {
-  background: url("~@/assets/background.png");
+  background: url("~@/assets/background.jpg");
   width:100%;
   height:100%;
   position:fixed;

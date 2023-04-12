@@ -22,4 +22,7 @@ public interface IUserService extends IService<User> {
 
     void updatePassword(UserPasswordDTO userPasswordDTO);
 
+    UserDTO loginEmail(UserDTO userDTO);
+
+    void sendEmailCode(String email);
 }

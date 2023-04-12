@@ -14,6 +14,8 @@ public class UserDTO {
     private Integer id;
     private String username;
     private String password;
+    private String email;
+    private String code;
     private String nickname;
     private String avatarUrl;
     private String token;
