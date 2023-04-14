@@ -32,7 +32,7 @@ public class ValidationServiceImpl extends ServiceImpl<ValidationMapper, Validat
         //删除同类型的验证
         UpdateWrapper<Validation> validationUpdateWrapper = new UpdateWrapper<>();
         validationUpdateWrapper.eq("email",email);
-        validationUpdateWrapper.eq("type", VaildationEnum.LOGIN.getCode());
+        validationUpdateWrapper.eq("type", type);
         remove(validationUpdateWrapper);
         //再插入新的code
         save(validation);

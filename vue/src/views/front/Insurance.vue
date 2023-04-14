@@ -1,45 +1,21 @@
 <template>
     <div>
-        <div style="margin: 10px 0">
-            <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
-            <el-input class="ml-5" style="width: 200px"  placeholder="种类" suffix-icon="el-icon-position" v-model="types"></el-input>
-            <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
-            <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
+        <div style="width: 1200px; height: 300px;margin-top: 20px">
+
         </div>
-        <el-table :data="tableData" stripe :header-cell-class-name="'headerBg'">
-            <el-table-column prop="name" label="保险名称" width="200"></el-table-column>
-            <el-table-column prop="img" label="保险图片">
-                <template slot-scope="scope">
-                    　<img :src="scope.row.img" class="img"/>
-                </template>
-            </el-table-column>
-            <el-table-column prop="description" label="描述"></el-table-column>
-            <el-table-column prop="price" label="保险价格" width="150"></el-table-column>
-            <el-table-column prop="types" label="保险类型" >
-                <template slot-scope="scope">
-                    <el-tag type="primary" v-if="scope.row.types === '人身意外险'">人身意外险</el-tag>
-                    <el-tag type="success" v-if="scope.row.types === '机动车辆险'">机动车辆险</el-tag>
-                    <el-tag type="info" v-if="scope.row.types === '医疗养老险'">医疗养老险</el-tag>
-                    <el-tag type="warning" v-if="scope.row.types === '工伤责任险'">工伤责任险</el-tag>
-                    <el-tag type="warning" v-if="scope.row.types === '财产保障险'">财产保障险</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="操作"  width="300" align="center">
-                <template slot-scope="scope">
-                    <el-button type="primary"   @click="buyInsurance(scope.row.id)"><i class="el-icon-edit"></i>购买</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div style="padding: 10px 0">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="pageNum"
-                    :page-sizes="[2, 5, 8]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-            </el-pagination>
+        <div style="margin-left: 220px;margin-top: 20px">
+            <el-row :gutter="5">
+                <el-col :span="24" v-for="item in tableData" :key="item.id" style="margin-bottom: 20px">
+                    <el-card style="width: 800px; height: 300px">
+                        <div style="float: left; width: 260px;height: 260px"><img :src="item.img" alt="" style="width: 100%;"></div>
+                        <div style="float: left;margin-left: 130px;margin-top: 65px" >
+                            <span style="font-size: 25px">{{ item.name }}</span>
+                            <div style="font-size: 20px; color: red;margin-top: 20px">￥ {{item.price}}</div>
+                            <div style="margin-top: 20px"><el-button size="medium" type="primary" @click="buyInsurance(item.id)">购买</el-button></div>
+                        </div>
+                    </el-card>
+                </el-col>
+            </el-row>
         </div>
     </div>
 </template>
@@ -51,16 +27,16 @@ export default {
     name: "Insurance",
     data() {
         return {
-            tableData: [],
-            name: '',
             types: '',
-            price: null,
+            price: 0,
             multipleSelection: [],
-            pageNum: 1,
-            pageSize: 5,
-            total: 0,
             user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
             insurance: [],
+            tableData: [],
+            total: 0,
+            pageNum: 1,
+            pageSize: 10,
+            name: "",
         }
     },
     created() {
@@ -68,13 +44,12 @@ export default {
     },
     methods: {
         load() {
-            this.request.get("/insurance/page", {
+            this.request.get("/insurance/page1", {
                 params: {
                     pageNum: this.pageNum,
                     pageSize: this.pageSize,
                     name: this.name,
                     price: this.price,
-                    types: this.types,
                 }
             }).then(res => {
                 this.tableData = res.data.records
@@ -83,9 +58,9 @@ export default {
             })
         },
         buyInsurance(insuranceId){
-            this.request.post('/insurance/buyInsurance/' + this.user.id + "/" + insuranceId).then(res => {
+            this.request.post('/orders/' + insuranceId ).then(res => {
                 if (res.code === '200') {
-                    this.$message.success("已购买")
+                    this.$message.success("已加入订单，请前往支付")
                 }else {
                     this.$message.error(res.msg)
                 }

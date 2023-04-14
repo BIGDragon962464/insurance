@@ -31,7 +31,7 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
             <el-table-column prop="name" label="保险名称"></el-table-column>
-            <el-table-column prop="user" label="所属人"></el-table-column>
+            <el-table-column prop="user" label="所属用户"></el-table-column>
             <el-table-column label="文件"><template slot-scope="scope"><el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image></template></el-table-column>
             <el-table-column prop="time" label="申请时间"></el-table-column>
             <el-table-column prop="state" label="理赔状态"></el-table-column>

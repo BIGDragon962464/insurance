@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="操作"  width="300" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" @click="buyInsurance(scope.row.id)" v-if="user.role === 'ROLE_USER'"><i class="el-icon-edit"></i>加入购物车</el-button>
+          <el-button type="primary" @click="buyInsurance(scope.row.id)"><i class="el-icon-edit"></i>加入购物车</el-button>
           <el-button type="success" v-if="user.role === 'ROLE_ADMIN'" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
           <el-popconfirm
               class="ml-5"
@@ -169,13 +169,13 @@ export default {
       this.load()
     },
     buyInsurance(insuranceId){
-      this.request.post('/insurance/buyInsurance/' + this.user.id + "/" + insuranceId).then(res => {
-        if (res.code === '200') {
-          this.$message.success("已加入购物车")
-        }else {
-          this.$message.error(res.msg)
-        }
-      })
+        this.request.post('/orders/' + insuranceId).then(res => {
+            if (res.code === '200') {
+                this.$message.success("已加入订单，请前往支付")
+            }else {
+                this.$message.error(res.msg)
+            }
+        })
     },
     handleEdit(row){
       //this.form = row

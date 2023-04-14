@@ -3,12 +3,16 @@ package com.czl.insurance.entity.dto;
 
 import com.czl.insurance.entity.Menu;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
  * 接受前端登录请求的参数
  */
+@Getter
+@Setter
 @Data
 public class UserDTO {
     private Integer id;

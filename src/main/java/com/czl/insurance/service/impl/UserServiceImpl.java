@@ -28,9 +28,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -126,29 +129,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void sendEmailCode(String email) {
+    public void sendEmailCode(String email , Integer type) throws MessagingException {
         Date now = new Date();
         //先查询同类型的code
         QueryWrapper<Validation> validationQueryWrapper = new QueryWrapper<>();
         validationQueryWrapper.eq("email",email);
-        validationQueryWrapper.eq("type",VaildationEnum.LOGIN.getCode());
+        validationQueryWrapper.eq("type",type);
         validationQueryWrapper.ge("time",now);//查询数据库没过期的code
         Validation validation = validationService.getOne(validationQueryWrapper);
         if (validation != null){
             throw new ServiceException("-1","当前您的验证码依然有效，请不要重复发送");
         }
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(from);  //发送人
-        message.setTo(email);
-        message.setSentDate(now);
-        message.setSubject("【龙保险】登陆邮箱验证");
         String code = RandomUtil.randomNumbers(4);//随机四位验证码
-        message.setText("本次登陆验证码为" + code + ",有效期 5 分钟，请妥善保管，切勿泄露！");
-        javaMailSender.send(message);
+
+        if (VaildationEnum.LOGIN.getCode().equals(type)){
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(from);  //发送人
+            message.setTo(email);
+            message.setSentDate(now);
+            message.setSubject("【龙保险】登陆邮箱验证");
+            message.setText("本次登录验证码为" + code + ",有效期 5 分钟，请妥善保管，切勿泄露！");
+            javaMailSender.send(message);
+        }else if (VaildationEnum.FORGET_PASS.getCode().equals(type)){
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+            helper.setSubject("【龙保险】忘记密码验证");
+            helper.setFrom(from);   //发送人
+            helper.setTo(email);
+            helper.setSentDate(now);    //富文本格式
+            String context = "<b>尊敬的用户：</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您好，您本次忘记密码的验证码是" +
+                    "<b style='text-color = red'>"+ code + "</b><br>" + ",有效期 5 分钟，请妥善保管，切勿泄露！";
+            helper.setText(context,true);
+            javaMailSender.send(message);
+        }
 
         //发送成功之后把验证码存入数据库
-        validationService.saveCode(email,code, VaildationEnum.LOGIN.getCode(), DateUtil.offsetMinute(now,1));
+        validationService.saveCode(email,code, type, DateUtil.offsetMinute(now,5));
     }
 
 

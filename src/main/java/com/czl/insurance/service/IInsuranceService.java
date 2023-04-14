@@ -15,6 +15,7 @@ import java.util.List;
  * @author 曹子龙
  * @since 2023-03-27
  */
+
 public interface IInsuranceService extends IService<Insurance> {
 
     void setBuyInsurance(Integer userId, Integer insuranceId);

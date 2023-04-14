@@ -12,27 +12,5 @@
         insert into bysj_user_insurance(user_id, insurance_id) values(#{userId}, #{insuranceId})
     </update>
 
-    <resultMap id="pageUser" type="com.czl.insurance.entity.Insurance">
-        <result column="id" property="id"/>
-        <result column="name" property="name"/>
-        <result column="price" property="price"/>
-        <result column="img" property="img"/>
-        <result column="types" property="types"/>
-        <result column="description" property="description"/>
-        <collection property="findInsurance" javaType="java.util.ArrayList" ofType="com.czl.insurance.entity.User">
-            <result column="id" property="id"/>
-            <result column="username" property="username"/>
-            <result column="nickname" property="nickname"/>
-        </collection>
-    </resultMap>
-
-    <select id="findInsurance" resultMap="pageUser">
-        select bysj_insurance.* from bysj_user
-        left join bysj_user_insurance
-        on bysj_user.id = bysj_user_insurance.user_id
-        left join bysj_insurance
-        on bysj_user_insurance.insurance_id = bysj_insurance.id
-        where bysj_user.id = #{id}
-    </select>
 
 </mapper>

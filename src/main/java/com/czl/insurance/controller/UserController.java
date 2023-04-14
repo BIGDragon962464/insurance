@@ -10,17 +10,21 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.common.Constants;
 import com.czl.insurance.common.Result;
 import com.czl.insurance.config.AuthAccess;
+import com.czl.insurance.entity.Validation;
 import com.czl.insurance.entity.dto.UserDTO;
 import com.czl.insurance.entity.dto.UserPasswordDTO;
 import com.czl.insurance.exception.ServiceException;
+import com.czl.insurance.service.IValidationService;
 import com.czl.insurance.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
@@ -42,6 +46,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/user")
 public class UserController {
 
+    @Resource
+    private IValidationService validationService;
 
     //登录接口
     @PostMapping("/login")
@@ -79,6 +85,33 @@ public class UserController {
         return Result.success(userService.register(userDTO));
     }
 
+    @AuthAccess
+    @PutMapping("/reset")
+    public Result reset(@RequestBody UserPasswordDTO userPasswordDTO){
+        if (StrUtil.isBlank(userPasswordDTO.getEmail()) || StrUtil.isBlank(userPasswordDTO.getCode())){
+            throw new ServiceException("-1","参数错误");
+        }
+        //查询邮箱验证的表，查看有没有发送邮箱code，如果不存在就重新获取
+        QueryWrapper<Validation> validationQueryWrapper = new QueryWrapper<>();
+        validationQueryWrapper.eq("email",userPasswordDTO.getEmail());
+        validationQueryWrapper.eq("code",userPasswordDTO.getCode());
+        validationQueryWrapper.ge("time",new Date());//查询数据库没过期的code where >= new date()
+        Validation validation = validationService.getOne(validationQueryWrapper);
+        if (validation == null){
+            throw new ServiceException("-1","验证码过期，请重新获取");
+        }
+
+        //如果验证通过就查询用户信息
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("email", userPasswordDTO.getEmail()); //根据存的user查询用户信息
+        User user = userService.getOne(userQueryWrapper);
+
+        //重置密码
+        user.setPassword("123");
+        userService.updateById(user);
+        return Result.success();
+    }
+
     //新增或更新
     @PostMapping
     public Result save(@RequestBody User user){
@@ -101,12 +134,15 @@ public class UserController {
     }
 
     @AuthAccess
-    @GetMapping("/email/{email}")
-    public Result sendEmailCode(@PathVariable String email) {
+    @GetMapping("/email/{email}/{type}")
+    public Result sendEmailCode(@PathVariable String email, @PathVariable Integer type ) throws MessagingException {
         if (StrUtil.isBlank(email)){
             throw new ServiceException(Constants.CODE_400,"参数错误");
         }
-        userService.sendEmailCode(email);
+        if (type == null){
+            throw new ServiceException(Constants.CODE_400,"参数错误");
+        }
+        userService.sendEmailCode(email,type );
         return Result.success();
     }
 

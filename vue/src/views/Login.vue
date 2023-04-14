@@ -24,64 +24,50 @@
                                  <el-button type="warning" size="small"  autocomplete="off" @click="$router.push('/register')">注册</el-button>
                                  <el-button type="primary" size="small"  autocomplete="off" @click="login">登录</el-button>
                              </el-form-item>
+                             <el-form-item>
+                                 <el-button type="text" size="small" style="margin-left: 200px" autocomplete="off" @click="handlePass">找回密码</el-button>
+                             </el-form-item>
                          </el-form>
                      </div>
                  </el-tab-pane>
                  <el-tab-pane label="邮箱登录" name="second">
                      <div style="margin: 10px auto; background-color: #fff; width: 300px; height: 300px; padding: 20px; border-radius: 10px">
-                         <el-form :model="user" :rules="rules1" ref="userForm">
+                         <el-form :model="user" :rules="rules" ref="userForm">
                              <el-form-item prop="email">
                                  <el-input size="medium" style="margin: 5px 0" prefix-icon="el-icon-message" v-model="user.email"></el-input>
                              </el-form-item>
                              <el-form-item prop="code">
-                                 <el-input size="medium" style="margin: 5px 0; width: 163px" prefix-icon="el-icon-lock" v-model="user.code"></el-input>
-                                 <el-button type="primary" size="small" class="ml-5" @click="getEmailCode">获取验证码</el-button>
+                                 <el-input size="small" style="margin: 5px 0; width: 163px" prefix-icon="el-icon-lock" v-model="user.code"></el-input>
+                                 <el-button type="primary" size="small" class="ml-5" @click="sendEmailCode(1)">获取验证码</el-button>
                              </el-form-item>
                              <el-form-item style="margin: 10px 0; text-align: right">
                                  <el-button type="primary" size="small"  autocomplete="off" @click="loginEmail">登录</el-button>
+                             </el-form-item>
+                             <el-form-item>
+                                 <el-button type="text" size="small" style="margin-left: 200px" autocomplete="off" @click="handlePass">找回密码</el-button>
                              </el-form-item>
                          </el-form>
                      </div>
                  </el-tab-pane>
              </el-tabs>
          </div>
+
+         <el-dialog title="找回密码" :visible.sync="dialogFormVisible" width="30%" style="border-radius: 20px" append-to-body>
+             <el-form label-width="100px" size="small">
+                 <el-form-item label="邮箱">
+                     <el-input size="medium" style="width: 295px" v-model="pass.email" auto-complete="off"></el-input>
+                 </el-form-item>
+                 <el-form-item label="验证码">
+                     <el-input size="medium" style="width: 180px" v-model="pass.code"></el-input>
+                     <el-button type="primary" size="medium" class="ml-5" @click="sendEmailCode(2)">获取验证码</el-button>
+                 </el-form-item>
+             </el-form>
+             <div slot="footer" class="dialog-footer">
+                 <el-button @click="dialogFormVisible = false">取 消</el-button>
+                 <el-button type="primary" @click="passwordBack">重置密码</el-button>
+             </div>
+         </el-dialog>
      </div>
-<!--  登录样式2  -->
-<!--    <div class="box">
-        <div class="content">
-            <div class="login-wrapper">
-                <h1>登录</h1>
-                <div class="login-form">
-                    <el-form :model="user" :rules="rules" ref="userForm">
-                        <div class="username form-item">
-                            <span>用户名</span>
-                            <input type="text" class="input-item" v-model="user.username">
-                        </div>
-                        <div class="password form-item">
-                            <span>密码</span>
-                            <input type="password" class="input-item" v-model="user.password">
-                        </div>
-                        <el-button class="login-btn" @click="login">登 录</el-button>
-                        <a style="cursor:pointer; font-size: 13px; margin-left: 300px" @click="$router.push('/register')">没有账号？</a>
-                    </el-form>
-                </div>
-                <div class="divider">
-                    <span class="line"></span>
-                    <span class="divider-text">其他方式登录</span>
-                    <span class="line"></span>
-                </div>
-                <div class="other-login-wrapper">
-                        &lt;!&ndash;qq、微信登录&ndash;&gt;
-&lt;!&ndash;                    <div class="other-login-item">
-                        <img src="../assets/QQ.png" alt="">
-                    </div>
-                    <div class="other-login-item">
-                        <img src="../assets/WeChat.png" alt="">
-                    </div>&ndash;&gt;
-                </div>
-            </div>
-        </div>
-    </div>-->
 </template>
 
 <script>
@@ -109,17 +95,9 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
-        email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' },
-            { min: 1, max: 30, message: '长度在30个字符之内', trigger: 'blur' }
-        ],
-        code: [
-            { min: 4, max: 4, message: '长度为4位', trigger: 'blur' }
-        ],
       },
-    rules1: {
-
-    }
+      dialogFormVisible: false,
+      pass: {},
     }
   },
   /*mounted(){
@@ -163,6 +141,14 @@ export default {
       });
     },
     loginEmail() {
+      if (!this.user.email){
+          this.$message.warning("请输入邮箱")
+          return
+      }
+      if (!this.user.code){
+          this.$message.warning("请输入验证码")
+          return;
+      }
       this.request.post("/user/loginEmail", this.user).then(res => {
         if(res.code === '200') {
             localStorage.setItem("user",JSON.stringify(res.data)) //存储用户信息到浏览器
@@ -176,22 +162,28 @@ export default {
         }
       })
     },
-    getEmailCode(){
-        if (!this.user.email){
-            this.$message.warning("请输入邮箱")
-            return
-        }
-        if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(this.user.email)){
-            this.$message.warning("请输入正确的邮箱格式")
-            return
-        }
-        this.request.get("/user/email/"  + this.user.email).then(res => {
-            if (res.code === '200'){
-                this.$message.success("发送成功")
-            }else {
-                this.$message.error(res.msg)
-            }
-        })
+    sendEmailCode(type){
+      let email;
+      if (type === 1){
+          email = this.user.email
+      }else if (type === 2){
+          email = this.pass.email
+      }
+      if (!email){
+          this.$message.warning("请输入邮箱")
+          return
+      }
+      if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(email)){
+          this.$message.warning("请输入正确的邮箱格式")
+          return
+      }
+      this.request.get("/user/email/"  + email + "/" + type).then(res => {
+          if (res.code === '200'){
+              this.$message.success("发送成功")
+          }else {
+              this.$message.error(res.msg)
+          }
+      })
     },
     refreshCode () {
         this.identifyCode = ''
@@ -205,6 +197,20 @@ export default {
     randomNum (min, max) {
         max = max + 1
         return Math.floor(Math.random() * (max - min) + min)
+    },
+    handlePass(){
+      this.dialogFormVisible = true;
+      this.pass = {}
+    },
+    passwordBack(){
+      this.request.put("/user/reset", this.pass).then(res => {
+          if (res.code === '200'){
+              this.$message.success("重置密码成功")
+              this.dialogFormVisible = false
+          }else {
+              this.$message.error(res.msg)
+          }
+      })
     },
   },
 }

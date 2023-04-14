@@ -7,17 +7,6 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-
-    <div style="margin: 10px 0">
-      <el-row :gutter="5">
-        <el-col :span="6" v-for="item in files" :key="item.id" style="margin-bottom: 20px">
-          <el-card>
-          <img :src="item.url" alt="" style="width: 100%;">
-          <div style="padding: 10px 0;" ><span>{{ item.name }}</span></div>
-          <div style="padding-top: 10px"><el-button type="primary">购买</el-button></div></el-card>
-        </el-col>
-      </el-row>
-    </div>
   </div>
 </template>
 
@@ -29,18 +18,31 @@ export default {
       imgs: [
           'https://tse3-mm.cn.bing.net/th/id/OIP-C.ktbvDl6mV2lBIaqAxZ1-UQHaEr?w=284&h=180&c=7&r=0&o=5&dpr=1.4&pid=1.7',
           'https://tse3-mm.cn.bing.net/th/id/OIP-C.e8WdxKkSLsxHeRA-iE6PFAHaDw?pid=ImgDet&rs=1',
-
       ],
-      files: []
+      tableData: [],
+      total: 0,
+      pageNum: 1,
+      pageSize: 10,
+      name: "",
     }
   },
-  /*created() {
-    this.request.get("/insurance/front/all").then(res => {
-      console.log(res.data)
-      this.files = res.data.filter(v => v.type ==='png' || v.type === 'webp' || v.type === 'jpg')
-    })
-  },*/
-  methods: {}
+  created() {
+      this.load() //获取后台商品数据
+  },
+  methods: {
+      load(){
+      },
+      handleSizeChange(pageSize) {
+          console.log(pageSize)
+          this.pageSize = pageSize
+          this.load()
+      },
+      handleCurrentChange(pageNum) {
+          console.log(pageNum)
+          this.pageNum = pageNum
+          this.load()
+      },
+  }
 }
 </script>
 

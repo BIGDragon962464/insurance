@@ -13,9 +13,9 @@
         <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal" router>
           <el-menu-item index="/front/home">首页</el-menu-item>
           <el-menu-item index="/front/insurance">产品信息</el-menu-item>
-          <el-menu-item index="/front/about">关于我们</el-menu-item>
           <el-menu-item index="/front/order">订单管理</el-menu-item>
           <el-menu-item index="/front/claims">申请理赔</el-menu-item>
+          <el-menu-item index="/front/about">关于我们</el-menu-item>
           <el-menu-item index="/front/join">加入我们</el-menu-item>
         </el-menu>
       </div>

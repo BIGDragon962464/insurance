@@ -25,14 +25,13 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");
-
+        if (StrUtil.isBlank(token)){
+            token = request.getParameter("token");
+        }
         // 如果不是映射到方法直接通过
         if(!(handler instanceof HandlerMethod)){
-            return true;
-        }else {
-            HandlerMethod h = (HandlerMethod) handler;
-            AuthAccess authAccess = h.getMethodAnnotation(AuthAccess.class);
-            if (authAccess != null){
+            AuthAccess annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthAccess.class);
+            if(annotation != null){
                 return true;
             }
         }

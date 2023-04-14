@@ -93,6 +93,16 @@ public class InsuranceController {
         return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
     }
 
+    @GetMapping("/page1")
+    public Result findPage1(@RequestParam Integer pageNum,
+                            @RequestParam Integer price,
+                           @RequestParam Integer pageSize) {
+        QueryWrapper<Insurance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.like("price",price);
+        return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
 
 }
 

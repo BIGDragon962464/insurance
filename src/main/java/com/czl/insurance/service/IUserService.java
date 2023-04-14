@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.czl.insurance.entity.dto.UserDTO;
 import com.czl.insurance.entity.dto.UserPasswordDTO;
 
+import javax.mail.MessagingException;
+
 /**
  * <p>
  *  服务类
@@ -24,5 +26,5 @@ public interface IUserService extends IService<User> {
 
     UserDTO loginEmail(UserDTO userDTO);
 
-    void sendEmailCode(String email);
+    void sendEmailCode(String email, Integer type) throws MessagingException;
 }
