@@ -27,14 +27,28 @@
 
     <div>
         <br><br>
+        <div style="margin: 10px 0">
+            <el-popconfirm
+                class="ml-5"
+                confirm-button-text='确定'
+                cancel-button-text='我再想想'
+                icon="el-icon-info"
+                icon-color="red"
+                title="您确定批量删除这些数据吗？"
+                @confirm="delBatch"
+            >
+                <el-button type="danger" slot="reference" >批量删除 <i class="el-icon-remove-outline"></i></el-button>
+            </el-popconfirm>
+        </div>
         <!--        <div style="margin: 10px 0">
                     <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
                     <el-input class="ml-5" style="width: 200px"  placeholder="种类" suffix-icon="el-icon-position" v-model="types"></el-input>
                     <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
                     <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
                 </div>-->
-        <el-table :data="tableData" stripe :header-cell-class-name="'headerBg'">
-            <el-table-column prop="no" label="订单号" width="200"></el-table-column>
+        <el-table :data="tableData"  :header-cell-class-name="'headerBg'" size="medium" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="no" label="订单号" width="120"></el-table-column>
             <el-table-column prop="username" label="购险人" width="100"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column prop="time" label="下单时间"></el-table-column>
@@ -130,6 +144,21 @@ export default {
                 }
             })
         },
+        delBatch() {
+            if (!this.multipleSelection.length) {
+                this.$message.error("请选择需要删除的数据")
+                return
+            }
+            let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
+            this.request.post("/orders/del/batch", ids).then(res => {
+                if (res.code === '200') {
+                    this.$message.success("批量删除成功")
+                    this.load()
+                } else {
+                    this.$message.error("批量删除失败")
+                }
+            })
+        },
         handleSizeChange(pageSize) {
             console.log(pageSize)
             this.pageSize = pageSize
@@ -139,6 +168,10 @@ export default {
             console.log(pageNum)
             this.pageNum = pageNum
             this.load()
+        },
+        handleSelectionChange(val) {
+            console.log(val)
+            this.multipleSelection = val
         },
     }
 }

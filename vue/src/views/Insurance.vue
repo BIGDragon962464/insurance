@@ -27,7 +27,7 @@
       <el-table-column prop="name" label="保险名称" width="200"></el-table-column>
       <el-table-column prop="img" label="保险图片">
         <template slot-scope="scope">
-          　<img :src="scope.row.img" class="img"/>
+          　<img style="width: 74px;height: 74px" :src="scope.row.img" class="img"/>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述"></el-table-column>

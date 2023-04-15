@@ -3,8 +3,8 @@
 <!--  头部  -->
     <div style="display: flex; height: 61px; line-height: 60px; border-bottom: 1px solid rgba(238,238,238,0)">
       <div class="pointer" style="width: 200px; display: flex; padding-left: 30px" @click="upload">
-        <div style="width: 60px">
-          <img  src="../../assets/logo.png" alt="" style="width: 50px; position: relative; top: 5px; right: 0">
+        <div style="width: 40px; margin-top: 5px">
+          <img  src="../../assets/logo.png" alt="" style="width: 30px; position: relative; top: 5px; right: 0">
         </div>
         <div style="flex: 1">龙保险</div>
       </div>
