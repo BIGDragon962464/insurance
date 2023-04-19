@@ -39,7 +39,7 @@
           <el-tag type="success" v-if="scope.row.flag === '机动车辆险'">机动车辆险</el-tag>
           <el-tag type="info" v-if="scope.row.flag === '医疗养老险'">医疗养老险</el-tag>
           <el-tag type="warning" v-if="scope.row.flag === '工伤责任险'">工伤责任险</el-tag>
-            <el-tag type="warning" v-if="scope.row.types === '财产保障险'">财产保障险</el-tag>
+            <el-tag type="danger" v-if="scope.row.types === '财产保障险'">财产保障险</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">

@@ -37,6 +37,8 @@
         <template slot-scope="scope">
           <el-tag type="primary" v-if="scope.row.flag === 'ROLE_ADMIN'">管理员</el-tag>
           <el-tag type="success" v-if="scope.row.flag === 'ROLE_USER'">用户</el-tag>
+          <el-tag type="danger" v-if="scope.row.flag === 'ROLE_AUDIT'">审核</el-tag>
+          <el-tag type="warning" v-if="scope.row.flag === 'ROLE_SALES'">销售</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述" width="400"></el-table-column>

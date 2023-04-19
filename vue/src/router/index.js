@@ -4,6 +4,12 @@ import store from "@/store";
 
 Vue.use(VueRouter)
 
+const originalPush = VueRouter.prototype.push
+
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 const routes = [
   {
     path: '/login',
@@ -133,7 +139,7 @@ router.beforeEach((to, from, next) => {
   if (!to.matched.length) {
     const storeMenus = localStorage.getItem("menus")
     if (storeMenus) {
-      next("/front/home")
+      next("/home")
     }else {
       next("/login")
     }

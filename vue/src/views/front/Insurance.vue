@@ -12,7 +12,7 @@
                             <span style="font-size: 25px">{{ item.name }}</span>
                             <div style="font-size: 20px; color: red;margin-top: 20px">￥ {{item.price}}</div>
                             <div style="margin-top: 20px"><el-button size="medium" type="primary" @click="buyInsurance(item.id)">购买</el-button></div>
-                            <div style="margin-top: 20px"><el-button size="medium" type="primary" @click="">查看详情</el-button></div>
+<!--                            <div style="margin-top: 20px"><el-button size="medium" type="primary" @click="">查看详情</el-button></div>-->
                         </div>
                     </el-card>
                 </el-col>

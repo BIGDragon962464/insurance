@@ -18,6 +18,7 @@ const store = new Vuex.Store({
             localStorage.removeItem("menus")
             router.push("/front/home")
 
+
             //重置路由
             resetRouter()
         }

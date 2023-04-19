@@ -38,12 +38,12 @@
           <el-tag type="success" v-if="scope.row.types === '机动车辆险'">机动车辆险</el-tag>
           <el-tag type="info" v-if="scope.row.types === '医疗养老险'">医疗养老险</el-tag>
           <el-tag type="warning" v-if="scope.row.types === '工伤责任险'">工伤责任险</el-tag>
-            <el-tag type="warning" v-if="scope.row.types === '财产保障险'">财产保障险</el-tag>
+            <el-tag type="danger" v-if="scope.row.types === '财产保障险'">财产保障险</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作"  width="300" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" @click="buyInsurance(scope.row.id)"><i class="el-icon-edit"></i>加入购物车</el-button>
+          <el-button type="primary" @click="buyInsurance(scope.row.id)" v-if="user.role === 'ROLE_USER'"><i class="el-icon-edit"></i>加入购物车</el-button>
           <el-button type="success" v-if="user.role === 'ROLE_ADMIN'" @click="handleEdit(scope.row)"><i class="el-icon-edit"></i>编辑</el-button>
           <el-popconfirm
               class="ml-5"
@@ -78,7 +78,7 @@
         <el-form-item label="保险图片">
           <el-upload
               class="avatar-uploader"
-              action="http://localhost:8088/file/upload"
+              :action="'http://' + serverIp + ':8088/file/upload'"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
           >
@@ -108,11 +108,13 @@
 
 <script>
 import insurance from "@/views/Insurance.vue";
+import {serverIp} from "../../public/config";
 
 export default {
   name: "Insurance",
   data() {
     return {
+      serverIp: serverIp,
       tableData: [],
       form:{},
       name: '',

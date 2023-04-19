@@ -76,6 +76,7 @@
 
 <script>
 import insurance from "@/views/Insurance.vue";
+import {serverIp} from "../../public/config";
 
 export default {
     name: "Orders",
@@ -99,7 +100,7 @@ export default {
     methods: {
         payInsurance(row){
             //得到一个url ，就是支付宝支付界面的url
-            window.open(`http://localhost:8088/alipay/pay?subject=${row.name}&traceNo=${row.no}&totalAmount=${row.total}`);
+            window.open(`http://${serverIp}/alipay/pay?subject=${row.name}&traceNo=${row.no}&totalAmount=${row.total}`);
         },
         load() {
             this.request.get("/orders/page", {

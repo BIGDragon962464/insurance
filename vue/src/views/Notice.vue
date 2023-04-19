@@ -73,7 +73,7 @@
                 <el-form-item label="公告封面">
                     <el-upload
                         class="avatar-uploader"
-                        action="http://localhost:8088/file/upload"
+                        :action="'http://' + serverIp + ':8088/file/upload'"
                         :show-file-list="false"
                         :on-success="handleImgUploadSuccess"
                     >
@@ -102,12 +102,15 @@
 </template>
 
 <script>
+import {serverIp} from "../../public/config";
+
 import E from "wangeditor"
 let editor;
 export default {
     name: "Notice",
     data(){
         return{
+            serverIp: serverIp,
             form:{},
             dialogFormVisible: false,
             dialogFormVisible1: false,
@@ -169,7 +172,7 @@ export default {
             this.$nextTick(() => {
                 if (!editor){
                     editor = new E("#richText")
-                    editor.config.uploadImgServer = 'http://localhost:8088/file/uploadImg'
+                    editor.config.uploadImgServer = `http://${serverIp}:8088/file/uploadImg`
                     editor.config.uploadFileName = 'file'
                     editor.create()
                 }
@@ -188,7 +191,7 @@ export default {
             this.$nextTick(() => {
                 if (!editor){
                     editor = new E("#richText")
-                    editor.config.uploadImgServer = 'http://localhost:8088/file/uploadImg'
+                    editor.config.uploadImgServer = `http://${serverIp}:8088/file/uploadImg`
                     editor.config.uploadFileName = 'file'
                     editor.create()
                 }

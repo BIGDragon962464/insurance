@@ -1,8 +1,8 @@
 <template>
   <div>
       <div style="width: 1200px; margin: 0 0 0 0; margin: auto">
-        <el-carousel height="200px" :interval="5000">
-          <el-carousel-item v-for="item in imgs" :key="item">
+        <el-carousel height="220px" :interval="5000" > <!--加 type="card" 会变成三图叠加两层的样式 -->
+          <el-carousel-item v-for="item in imgs1" :key="item">
             <img :src="item" alt="" style="width: 100%">
           </el-carousel-item>
         </el-carousel>
@@ -10,12 +10,16 @@
       <div style="margin: 10px 0">
           <el-row>
               <el-col :span="12">
-                  <div style="margin: 10px 0; width: 600px;height: 400px">
-
+                  <div style="margin-top: 30px;margin-left: 20px; width: 520px; height: 400px">
+                      <el-carousel height="360px" width="500px" :interval="5000">
+                          <el-carousel-item v-for="item in imgs2" :key="item">
+                              <img :src="item" alt="" style="width: 100%">
+                          </el-carousel-item>
+                      </el-carousel>
                   </div>
               </el-col>
               <el-col :span="12">
-                  <el-card style="margin: 10px 0; width: 600px; height: 400px">
+                  <el-card style="margin: 10px 0; width: 570px; height: 400px">
                       <div style="padding-bottom: 20px; font-size: 20px">系 统 公 告</div>
                       <el-collapse accordion v-model="activeNames" v-for="(item, index) in notice">
                           <el-collapse-item :title="item.name" :name="index + ''">
@@ -31,17 +35,26 @@
               </el-col>
           </el-row>
       </div>
+
   </div>
 </template>
 
 <script>
+import router, {setRoutes} from "@/router";
+
 export default {
   name: "FrontHome",
   data(){
     return{
       activeNames: ['-1'],
-      imgs: [
-          'https://tse3-mm.cn.bing.net/th/id/OIP-C.e8WdxKkSLsxHeRA-iE6PFAHaDw?pid=ImgDet&rs=1',
+      imgs1: [
+          'https://www.chinalife.com.cn/chinalife/resource/cms/2023/04/img_pc_site/2023041215482547911.jpg',
+          //require('../../assets/img1.png'),
+      ],
+      imgs2: [
+          'https://tse1-mm.cn.bing.net/th/id/OIP-C.n0JA6GN4skcrkYfsBu4jsgHaEK?w=295&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+          'https://tse2-mm.cn.bing.net/th/id/OIP-C.KMh0t8-Q4H8QVD3lBXjKHgHaE8?pid=ImgDet&rs=1',
+          //require('../../assets/img1.png'),
       ],
       notice: [],
       content: '',
@@ -54,6 +67,7 @@ export default {
       })
   },
   methods: {
+
   }
 }
 </script>

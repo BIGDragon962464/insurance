@@ -85,6 +85,8 @@
 </template>
 
 <script>
+import {serverIp} from "../../public/config";
+
 export default {
   name: "User",
   data(){
@@ -184,7 +186,7 @@ export default {
     },
 
     exp() {
-      window.open("http://localhost:8088/menu/export")
+      window.open(`http://${serverIp}:8088/menu/export`)
     },
 
     reset(){

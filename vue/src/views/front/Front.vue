@@ -21,6 +21,7 @@
       </div>
       <div style="width: 200px">
         <div v-if="!user.username" style="text-align: right; padding-right: 30px">
+<!--          <el-button @click="$router.push('/login')">登录</el-button>-->
           <el-button @click="$router.push('/login')">登录</el-button>
           <el-button @click="$router.push('/register')">注册</el-button>
         </div>
@@ -50,6 +51,8 @@
 </template>
 
 <script>
+import router, {resetRouter, setRoutes} from "@/router";
+
 export default {
   name: "Front",
   data(){
@@ -63,6 +66,7 @@ export default {
     logout(){
       this.$store.commit("logout")
       this.$message.success("退出成功！")
+      location.reload()
     },
     upload(){
       this.$router.push("/front/home")

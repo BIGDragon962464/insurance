@@ -35,12 +35,6 @@
             <el-table-column label="文件"><template slot-scope="scope"><el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image></template></el-table-column>
             <el-table-column prop="time" label="申请时间"></el-table-column>
             <el-table-column prop="state" label="理赔状态"></el-table-column>
-            <el-table-column label="审核" v-if="user.role === 'ROLE_ADMIN'" width="240">
-                <template v-slot="scope">
-                    <el-button type="success" @click="changeState(scope.row, '审核通过')" :disabled="scope.row.state !== '待审核'">审核通过</el-button>
-                    <el-button type="danger" @click="changeState(scope.row, '审核不通过')" :disabled="scope.row.state !== '待审核'">审核不通过</el-button>
-                </template>
-            </el-table-column>
             <el-table-column label="操作"  width="180" align="center">
                 <template slot-scope="scope" v-if="scope.row.user === user.username || user.role === 'ROLE_ADMIN'">
                     <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
@@ -79,7 +73,7 @@
                 <!--          <el-input v-model="form.user" autocomplete="off"></el-input>-->
                 <!--        </el-form-item>-->
                 <el-form-item label="理赔文件">
-                    <el-upload action="http://localhost:8088/file/upload" ref="img" :on-success="handleImgUploadSuccess">
+                    <el-upload :action="'http://' + serverIp + ':8088/file/upload'" ref="img" :on-success="handleImgUploadSuccess">
                         <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
@@ -100,10 +94,13 @@
 </template>
 
 <script>
+import {serverIp} from "../../../public/config";
+
 export default {
     name: "Claims",
     data() {
         return {
+            serverIp: serverIp,
             tableData: [],
             total: 0,
             pageNum: 1,
@@ -224,7 +221,7 @@ export default {
             window.open(url)
         },
         exp() {
-            window.open("http://localhost:8088/claims/export")
+            window.open(`http://${serverIp}:8088/claims/export`)
         },
         handleExcelImportSuccess() {
             this.$message.success("导入成功")

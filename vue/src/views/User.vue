@@ -22,7 +22,7 @@
       >
         <el-button type="danger" slot="reference"><i class="el-icon-remove-outline"></i> 批量删除</el-button>
       </el-popconfirm>
-      <el-upload action="http://localhost:8088/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
+      <el-upload :action="'http://' + serverIp + ':8088/user/import'" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
         <el-button type="primary" class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>
       </el-upload>
 
@@ -39,6 +39,8 @@
         <template slot-scope="scope">
           <el-tag type="primary" v-if="scope.row.role === 'ROLE_ADMIN'">管理员</el-tag>
           <el-tag type="success" v-if="scope.row.role === 'ROLE_USER'">用户</el-tag>
+          <el-tag type="danger" v-if="scope.row.role === 'ROLE_AUDIT'">审核</el-tag>
+          <el-tag type="warning" v-if="scope.row.role === 'ROLE_SALES'">销售</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="nickname" label="姓名" width="120"></el-table-column>
@@ -106,10 +108,13 @@
 </template>
 
 <script>
+import {serverIp} from "../../public/config";
+
 export default {
   name: "User",
   data(){
     return{
+      serverIp: serverIp,
       username: "",
       nickname: "",
       address: "",
@@ -215,7 +220,7 @@ export default {
     },
 
     exp() {
-      window.open("http://localhost:8088/user/export")
+      window.open(`http://${serverIp}:8088/user/export`)
     },
 
     reset(){
