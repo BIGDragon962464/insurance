@@ -41,7 +41,7 @@
             </el-table-column>
             <el-table-column prop="time" label="申请时间"></el-table-column>
             <el-table-column prop="state" label="理赔状态"></el-table-column>
-            <el-table-column label="审核" v-if="user.role === 'ROLE_ADMIN'" width="240">
+            <el-table-column label="审核" v-if="user.role === 'ROLE_ADMIN' || user.role === 'ROLE_AUDIT'" width="240">
                 <template v-slot="scope">
                     <el-button type="success" @click="changeState(scope.row, '审核通过')" :disabled="scope.row.state !== '待审核'">审核通过</el-button>
                     <el-button type="danger" @click="changeState(scope.row, '审核不通过')" :disabled="scope.row.state !== '待审核'">审核不通过</el-button>
