@@ -26,13 +26,12 @@
     </div>-->
 
     <div>
-        <br>
-<!--        <div style="margin: 10px 0">
+        <div style="margin: 10px 0">
             <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
-            <el-input class="ml-5" style="width: 200px"  placeholder="种类" suffix-icon="el-icon-position" v-model="types"></el-input>
+            <el-input class="ml-5" style="width: 200px"  placeholder="购险人" suffix-icon="el-icon-position" v-model="username"></el-input>
             <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
             <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
-        </div>-->
+        </div>
         <el-table :data="tableData" stripe :header-cell-class-name="'headerBg'">
             <el-table-column prop="no" label="订单号" width="200"></el-table-column>
             <el-table-column prop="username" label="购险人" width="100"></el-table-column>
@@ -82,6 +81,7 @@ export default {
     name: "Orders",
     data() {
         return {
+            username: [],
             tableData: [],
             name: '',
             types: '',
@@ -107,6 +107,8 @@ export default {
                 params: {
                     pageNum: this.pageNum,
                     pageSize: this.pageSize,
+                    username: this.username,
+                    name: this.name
                 }
             }).then(res => {
                 this.tableData = res.data.records
@@ -117,8 +119,7 @@ export default {
 
         reset(){
             this.name = ""
-            this.types = ""
-            this.price = ""
+            this.username = ""
             this.load()
         },
         del(id) {

@@ -1,13 +1,6 @@
 <template>
     <div>
-        <div style="margin: 10px 0">
-            <el-input style="width: 200px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="name"></el-input>
-            <!--      <el-input style="width: 200px" placeholder="请输入" suffix-icon="el-icon-message" class="ml-5" v-model="email"></el-input>-->
-            <!--      <el-input style="width: 200px" placeholder="请输入" suffix-icon="el-icon-position" class="ml-5" v-model="address"></el-input>-->
-            <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
-            <el-button type="warning" @click="reset">重置</el-button>
-        </div>
-
+        <br><br>
         <div style="margin: 10px 0">
             <el-button type="primary" @click="handleAdd">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
             <el-popconfirm
@@ -21,10 +14,7 @@
             >
                 <el-button type="danger" slot="reference" >批量删除 <i class="el-icon-remove-outline"></i></el-button>
             </el-popconfirm>
-            <!-- <el-upload action="http://localhost:8088/claims/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
-              <el-button type="primary" class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>
-            </el-upload>
-            <el-button type="primary" @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button> -->
+            <a style="margin-left: 900px; color: #409EFF; cursor: pointer" @click="download">点击这里下载模板</a>
         </div>
 
         <el-table :data="tableData"  :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
@@ -32,7 +22,13 @@
             <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
             <el-table-column prop="name" label="保险名称"></el-table-column>
             <el-table-column prop="user" label="所属人"></el-table-column>
-            <el-table-column label="文件"><template slot-scope="scope"><el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image></template></el-table-column>
+            <el-table-column prop="" label="文件">
+                <template slot-scope="scope">
+<!--                    <el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]">
+                    </el-image>-->
+                    <div style="color: #cccccc">文件暂不支持预览</div>
+                </template>
+            </el-table-column>
             <el-table-column prop="time" label="申请时间"></el-table-column>
             <el-table-column prop="state" label="理赔状态"></el-table-column>
             <el-table-column label="操作"  width="180" align="center">
@@ -67,7 +63,11 @@
         <el-dialog title="信息" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
             <el-form label-width="100px" size="small" style="width: 90%">
                 <el-form-item label="保险名称">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                    <el-select clearable v-model="form.name" placeholder="请选择" style="width: 100%">
+                        <el-option v-for="(item , index) in options" :label="item.name" :key="index.name" :value="item.name">
+                            {{item.name}}
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <!--        <el-form-item label="所属人">-->
                 <!--          <el-input v-model="form.user" autocomplete="off"></el-input>-->
@@ -100,6 +100,7 @@ export default {
     name: "Claims",
     data() {
         return {
+            options:[],
             serverIp: serverIp,
             tableData: [],
             total: 0,
@@ -145,6 +146,7 @@ export default {
             })
         },
         handleAdd() {
+            this.getInsurance()
             this.dialogFormVisible = true
             this.form = {}
             this.$nextTick(() => {
@@ -217,16 +219,26 @@ export default {
         handleImgUploadSuccess(res) {
             this.form.img = res
         },
-        download(url) {
-            window.open(url)
+        download() {
+            window.open(`http://localhost:8088/file/242201ced2ed469881e4b6af36cdfaac.docx`)
         },
+
         exp() {
             window.open(`http://${serverIp}:8088/claims/export`)
         },
         handleExcelImportSuccess() {
             this.$message.success("导入成功")
             this.load()
-        }
+        },
+        getInsurance(){
+            this.request.get("/orders/getOrderInsurance" , {
+                params: {
+                    username: this.user.nickname,
+                }
+            }).then(res => {
+                this.options = res.data
+            })
+        },
     }
 }
 </script>

@@ -33,23 +33,23 @@
             <el-table-column prop="name" label="保险名称"></el-table-column>
             <el-table-column prop="user" label="所属用户"></el-table-column>
             <el-table-column label="文件">{{}}
-                <template slot-scope="scope">
-                    {{scope.row.img}}
+                <template slot-scope="scope" >
+<!--                    {{scope.row.img}}--><div style="color: #cccccc">文件暂不支持预览</div>
 <!--                    <el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]">
                     </el-image>-->
                 </template>
             </el-table-column>
             <el-table-column prop="time" label="申请时间"></el-table-column>
             <el-table-column prop="state" label="理赔状态"></el-table-column>
-            <el-table-column label="审核" v-if="user.role === 'ROLE_ADMIN' || user.role === 'ROLE_AUDIT'" width="240">
+            <el-table-column label="审核" v-if="user.role === 'ROLE_ADMIN' || user.role === 'ROLE_AUDIT'" width="220">
                 <template v-slot="scope">
                     <el-button type="success" @click="changeState(scope.row, '审核通过')" :disabled="scope.row.state !== '待审核'">审核通过</el-button>
                     <el-button type="danger" @click="changeState(scope.row, '审核不通过')" :disabled="scope.row.state !== '待审核'">审核不通过</el-button>
                 </template>
             </el-table-column>
-            <el-table-column label="下载"  width="180" align="center">
+            <el-table-column label="操作"  width="200" align="center">
                 <template slot-scope="scope" v-if="scope.row.user === user.username || user.role === 'ROLE_ADMIN'">
-                    <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
+<!--                    <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>-->
                     <el-popconfirm
                         class="ml-5"
                         confirm-button-text='确定'
@@ -62,8 +62,10 @@
                         <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
                     </el-popconfirm>
                 </template>
-                <template slot-scope="scope">
-                    <el-button type="primary" @click="download(scope.row.url)">下载</el-button>
+            </el-table-column>
+            <el-table-column label="下载"  width="100" align="center">
+                <template slot-scope="scope" v-if="scope.row.user === user.username || user.role === 'ROLE_ADMIN'">
+                    <el-button class="ml-5" type="primary" @click="download(scope.row.img)">下载 <i class="el-icon-remove-outline"></i></el-button>
                 </template>
             </el-table-column>
         </el-table>

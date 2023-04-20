@@ -3,11 +3,14 @@ package com.czl.insurance.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.czl.insurance.common.Constants;
 import com.czl.insurance.common.Result;
 import com.czl.insurance.common.RoleEnum;
 import com.czl.insurance.entity.Insurance;
 import com.czl.insurance.entity.User;
 import com.czl.insurance.exception.ServiceException;
+import com.czl.insurance.mapper.DictMapper;
+import com.czl.insurance.mapper.OrdersMapper;
 import com.czl.insurance.service.IInsuranceService;
 import com.czl.insurance.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +37,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/orders")
 public class OrdersController {
+
+    @Resource
+    private OrdersMapper ordersMapper;
 
     @Resource
     private IOrdersService ordersService;
@@ -94,20 +100,34 @@ public class OrdersController {
 
     @GetMapping("/page")
     public Result findPage(@RequestParam(defaultValue = "") String username,
+                           @RequestParam(defaultValue = "") String name,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("id");
-        if (!"".equals(username)) {
-            queryWrapper.like("id", username);
-        }
         User currentUser = TokenUtils.getCurrentUser();
         if (RoleEnum.ROLE_USER.toString().equals(currentUser.getRole())) {  // 角色是普通用户
             queryWrapper.eq("username", currentUser.getNickname());
+        }
+        if (!"".equals(username)) {
+            queryWrapper.like("username", username);
+        }
+        if (!"".equals(name)) {
+            queryWrapper.like("name", name);
         }
         return Result.success(ordersService.page(new Page<>(pageNum, pageSize),queryWrapper));
     }
 
 
+    @GetMapping("/getOrderInsurance")
+    public Result getOrderInsurance(@RequestParam(defaultValue = "") String username,
+                                    @RequestParam(defaultValue = "") String state){
+        QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
+        if (!"".equals(username)) {
+            queryWrapper.eq("state","已支付");
+            queryWrapper.eq("username", username);
+        }
+        return Result.success(ordersMapper.selectList(queryWrapper));
+    }
 }
 

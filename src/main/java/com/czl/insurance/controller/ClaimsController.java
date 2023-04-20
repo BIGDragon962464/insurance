@@ -5,7 +5,9 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czl.insurance.common.Result;
 import com.czl.insurance.common.RoleEnum;
+import com.czl.insurance.entity.Orders;
 import com.czl.insurance.entity.User;
+import com.czl.insurance.mapper.FileMapper;
 import com.czl.insurance.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -35,6 +37,9 @@ public class ClaimsController {
 
     @Resource
     private IClaimsService claimsService;
+
+    @Resource
+    private FileMapper fileMapper;
 
     //新增或更新
     @PostMapping

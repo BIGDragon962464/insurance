@@ -6,6 +6,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/gloable.css';
 import request from "@/utils/request";
+// px2rem 自适应
+import 'lib-flexible'
 
 Vue.config.productionTip = false
 
