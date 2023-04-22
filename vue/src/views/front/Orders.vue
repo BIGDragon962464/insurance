@@ -29,10 +29,12 @@
             <el-table-column prop="state" label="支付状态" width="100"></el-table-column>
             <el-table-column prop="total" label="订单总价" ></el-table-column>
             <el-table-column prop="paymentTime" label="支付时间" ></el-table-column>
-            <el-table-column prop="alipayNo" label="支付宝流水号" ></el-table-column>
-            <el-table-column label="操作"  width="300" align="center">
+            <el-table-column prop="alipayNo" label="支付宝流水号" width="140" ></el-table-column>
+            <el-table-column prop="returnTime" label="退款时间"></el-table-column>
+            <el-table-column label="操作"  width="280" align="center">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="payInsurance(scope.row)"><i class="el-icon-edit"></i>支 付</el-button>
+                    <el-button type="primary" @click="payInsurance(scope.row)" :disabled="scope.row.state !== '待支付'"><i class="el-icon-edit"></i>支 付</el-button>
+                    <el-button type="danger" @click="returnPay(scope.row)" :disabled="scope.row.state !== '已支付'">退款</el-button>
                     <el-popconfirm
                         class="ml-5"
                         confirm-button-text='确定'
@@ -89,6 +91,17 @@ export default {
         payInsurance(row){
             //得到一个url ，就是支付宝支付界面的url
             window.open(`http://${serverIp}:8088/alipay/pay?subject=${row.name}&traceNo=${row.no}&totalAmount=${row.total}`);
+        },
+        returnPay(row) {
+            const url = `http://${serverIp}:8088/alipay/return?totalAmount=${row.total}&alipayTraceNo=${row.alipayNo}&traceNo=${row.no}`
+            this.request.get(url).then(res => {
+                if(res.code === '200') {
+                    this.$message.success("退款成功")
+                }  else {
+                    this.$message.error("退款失败")
+                }
+                this.load()
+            })
         },
         load() {
             this.request.get("/orders/page", {

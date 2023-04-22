@@ -1,30 +1,4 @@
-<template><!--    <div>
-        <div style="margin-top: 20px; margin-bottom: 20px">
-            已选购
-        </div>
-      <el-table :data="findInsurance" stripe>
-          <el-table-column prop="name" label="保险名称"></el-table-column>
-          <el-table-column prop="price" label="保险价格"></el-table-column>
-          <el-table-column prop="types" label="保险类型"></el-table-column>
-          <el-table-column prop="description" label="保险描述"></el-table-column>
-          <el-table-column label="操作" width="300" align="center">
-              <template v-slot="scope">
-                  <el-popconfirm
-                          class="ml-5"
-                          confirm-button-text='确定'
-                          cancel-button-text ='我再想想'
-                          icon="el-icon-info"
-                          icon-color="red"
-                          title="您确定删除吗？"
-                          @confirm="del(scope.row.id)"
-                  >
-                      <el-button type="danger" slot="reference"><i class="el-icon-remove-outline"></i> 删除</el-button>
-                  </el-popconfirm>
-              </template>
-          </el-table-column>
-      </el-table>
-    </div>-->
-
+<template>
     <div>
         <div style="margin: 10px 0">
             <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
@@ -41,9 +15,11 @@
             <el-table-column prop="total" label="订单总价" ></el-table-column>
             <el-table-column prop="paymentTime" label="支付时间" ></el-table-column>
             <el-table-column prop="alipayNo" label="支付宝流水号" ></el-table-column>
+            <el-table-column prop="returnTime" label="退款时间"></el-table-column>
             <el-table-column label="操作"  width="300" align="center">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="payInsurance(scope.row)"><i class="el-icon-edit"></i>支 付</el-button>
+                    <el-button type="primary" @click="payInsurance(scope.row)" :disabled="scope.row.state !== '待支付'"><i class="el-icon-edit"></i>支 付</el-button>
+                    <el-button type="danger" @click="returnPay(scope.row)" :disabled="scope.row.state !== '已支付'">退款</el-button>
                     <el-popconfirm
                         class="ml-5"
                         confirm-button-text='确定'
@@ -100,7 +76,18 @@ export default {
     methods: {
         payInsurance(row){
             //得到一个url ，就是支付宝支付界面的url
-            window.open(`http://${serverIp}/alipay/pay?subject=${row.name}&traceNo=${row.no}&totalAmount=${row.total}`);
+            window.open(`http://${serverIp}:8088/alipay/pay?subject=${row.name}&traceNo=${row.no}&totalAmount=${row.total}`);
+        },
+        returnPay(row) {
+            const url = `http://${serverIp}:8088/alipay/return?totalAmount=${row.total}&alipayTraceNo=${row.alipayNo}&traceNo=${row.no}`
+            this.request.get(url).then(res => {
+                if(res.code === '200') {
+                    this.$message.success("退款成功")
+                }  else {
+                    this.$message.error("购买已过三天，退款失败")
+                }
+                this.load()
+            })
         },
         load() {
             this.request.get("/orders/page", {

@@ -57,6 +57,11 @@ public class Orders implements Serializable {
       private String paymentTime;
 
       /**
+       * 退款时间
+       */
+      private String returnTime;
+
+      /**
        * 支付宝订单流水号
        */
       private String alipayNo;
