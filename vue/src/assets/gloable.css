@@ -14,3 +14,15 @@
 .pd-10{
     padding: 10px 0;
 }
+.typesButton{
+    margin-top: 18px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 18px;
+    height: 40px;
+    border-radius:15px;
+}
+.cancelUnder{
+    text-decoration:none;
+    color: white;
+}

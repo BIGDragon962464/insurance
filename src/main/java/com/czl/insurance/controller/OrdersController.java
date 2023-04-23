@@ -67,6 +67,7 @@ public class OrdersController {
 
         Orders orders = new Orders();
         orders.setName(insurance.getName());
+        orders.setImg(insurance.getImg());
         orders.setNo(DateUtil.format(new Date(),"yyyyMMdd") + System.currentTimeMillis());
         orders.setTime(DateUtil.now());
         orders.setUserId(userId);

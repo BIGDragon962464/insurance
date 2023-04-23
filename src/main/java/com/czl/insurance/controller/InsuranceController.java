@@ -95,11 +95,15 @@ public class InsuranceController {
 
     @GetMapping("/page1")
     public Result findPage1(@RequestParam Integer pageNum,
+                            @RequestParam String name,
                             @RequestParam Integer price,
-                           @RequestParam Integer pageSize) {
+                            @RequestParam String types,
+                            @RequestParam Integer pageSize) {
         QueryWrapper<Insurance> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("id");
         queryWrapper.like("price",price);
+        queryWrapper.like("name",name);
+        queryWrapper.like("types",types);
         return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
     }
 

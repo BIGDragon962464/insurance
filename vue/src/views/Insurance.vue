@@ -141,7 +141,6 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: this.name,
-          price: this.price,
           types: this.types,
         }
       }).then(res => {

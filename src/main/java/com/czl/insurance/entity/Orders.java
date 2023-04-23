@@ -71,6 +71,10 @@ public class Orders implements Serializable {
      */
       private BigDecimal total;
 
+      /**
+       * 订单总价
+       */
+      private String img;
     
 
 }

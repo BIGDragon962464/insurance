@@ -1,7 +1,7 @@
 <template>
     <div>
         <br><br>
-        <div style="margin: 10px 0">
+<!--        <div style="margin: 10px 0">
             <el-popconfirm
                 class="ml-5"
                 confirm-button-text='确定'
@@ -13,18 +13,43 @@
             >
                 <el-button type="danger" slot="reference" >批量删除 <i class="el-icon-remove-outline"></i></el-button>
             </el-popconfirm>
+        </div>-->
+        <div style="margin-top: 20px">
+            <el-row :gutter="5">
+                <el-col :span="24" v-for="item in tableData" :key="item.id" style="margin-bottom: 20px">
+                    <el-card class="card">
+                        <div style="font-size: 18px;color: #ec5a00; float: right;">{{item.state}}</div>
+                        <div style="float: left; width: 260px;height: 260px">
+                            <img :src="item.img" alt="" style="width: 95%;">
+                        </div>
+                        <div style="float: left; margin-left: 200px;margin-top: 50px" >
+                            <span style="font-size: 25px">{{ item.name }}</span>
+                        </div>
+                        <div style="float: right; margin-top: 150px;">
+                            <span style="font-size: 14px; color: #8c939d" v-if="item.state === '已支付'">支持三天内无理由退货 </span>
+                            <span style="font-size: 17px" v-if="item.state === '待支付'">待支付: </span>
+                            <span style="font-size: 17px" v-if="item.state === '已支付'">已支付: </span>
+                            <span style="font-size: 25px; color: red">￥ {{ item.total }}</span>
+                        </div>
+                        <div style="text-align: right; margin-top: 190px; margin-right: 30px">
+                            <el-button type="primary" style="border-radius: 20px; font-size: 17px; width: 80px; height: 40px" @click="payInsurance(item)" v-if="item.state === '待支付'">支 付</el-button>
+                            <el-button type="danger" style="border-radius: 20px; font-size: 17px; width: 80px; height: 40px" @click="returnPay(item)" v-if="item.state === '已支付'">退款</el-button>
+                            <el-button type="warning" style="border-radius: 20px; font-size: 17px; width: 100px; height: 40px" @click="payInsurance(item)" v-if="item.state === '已退款'">重新购买</el-button>
+                        </div>
+                    </el-card>
+                </el-col>
+            </el-row>
         </div>
-        <!--        <div style="margin: 10px 0">
-                    <el-input class="ml-5" style="width: 200px"  placeholder="请输入保险名称" suffix-icon="el-icon-info" v-model="name"></el-input>
-                    <el-input class="ml-5" style="width: 200px"  placeholder="种类" suffix-icon="el-icon-position" v-model="types"></el-input>
-                    <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
-                    <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
-                </div>-->
-        <el-table :data="tableData"  :header-cell-class-name="'headerBg'" size="medium" @selection-change="handleSelectionChange">
+<!--        <el-table :data="tableData"  :header-cell-class-name="'headerBg'" size="medium" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="no" label="订单号" width="120"></el-table-column>
             <el-table-column prop="username" label="购险人" width="100"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="img" label="图片">
+                <template slot-scope="scope">
+                    　<img style="width: 74px;height: 74px" :src="scope.row.img" class="img" alt=""/>
+                </template>
+            </el-table-column>
             <el-table-column prop="time" label="下单时间"></el-table-column>
             <el-table-column prop="state" label="支付状态" width="100"></el-table-column>
             <el-table-column prop="total" label="订单总价" ></el-table-column>
@@ -59,7 +84,7 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
-        </div>
+        </div>-->
     </div>
 </template>
 
