@@ -55,7 +55,26 @@
                   <el-button type="primary" @click="savePassword" >确 定</el-button>
                 </div>
               </el-form>
-            </el-card></el-col>
+            </el-card>
+          </el-col>
+          <el-col :span="24">
+              <el-card style="width: 500px;margin-top: 10px">
+                  <div  style="text-align: center; margin-top: 10px">
+                      <h1>实名信息</h1>
+                  </div>
+                  <el-form label-width="80px" size="small" :model="form" :rules="rules1" ref="pass" style="margin-top: 20px; margin-bottom: 20px">
+                      <el-form-item label="姓名" prop="trueName">
+                          <el-input  v-model="form.trueName" autocomplete="off"  style="width: 350px;"></el-input>
+                      </el-form-item>
+                      <el-form-item label="身份证号" prop="trueId">
+                          <el-input v-model="form.trueId" autocomplete="off"  style="width: 350px"></el-input>
+                      </el-form-item>
+                      <div style="text-align: center">
+                          <el-button type="primary" @click="save" >确 定</el-button>
+                      </div>
+                  </el-form>
+              </el-card>
+          </el-col>
         </el-row>
     </el-row>
   </div>
@@ -85,13 +104,21 @@ export default {
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
       },
+      rules1:{
+          trueName: [
+              { required: true, message: '请输入真实姓名', trigger: 'blur' },
+          ],
+          trueId: [
+              { required: true, message: '请输入身份证号', trigger: 'blur' },
+              { min: 18, max: 18, message: '请输入18位身份证号', trigger: 'blur' }
+          ],
+      },
     }
   },
   created() {
     this.getUser().then(res => {
       this.form = res
     })
-
     this.form.username = this.user.username
   },
   methods: {
@@ -102,13 +129,17 @@ export default {
       this.request.post("/user", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功,请重新登录同步数据")
+          this.logout()
           //触发父级更新User的方法
           this.$emit("refreshUser")
-
         } else {
           this.$message.error("保存失败")
         }
       })
+    },
+    logout(){
+        this.$store.commit("logout")
+        location.reload()
     },
     handleAvatarSuccess(res) {
       this.form.avatarUrl = res

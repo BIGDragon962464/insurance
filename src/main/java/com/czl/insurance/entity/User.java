@@ -78,5 +78,13 @@ public class User implements Serializable {
      */
     private String role;
 
+    /**
+     * 真实姓名
+     */
+    private String trueName;
 
+    /**
+     * 身份证号
+     */
+    private String trueId;
 }

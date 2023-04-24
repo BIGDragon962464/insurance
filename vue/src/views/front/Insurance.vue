@@ -29,7 +29,6 @@
                             <span style="font-size: 25px">{{ item.name }}</span>
                             <div style="font-size: 30px; color: red;margin-top: 20px">￥ {{item.price}}</div>
                             <div style="margin-top: 20px"><el-button style="border-radius: 25px; height: 50px;width: 100px;font-size: 20px" type="primary" @click="buyInsurance(item.id)">购买</el-button></div>
-<!--                            <div style="margin-top: 20px"><el-button size="medium" type="primary" @click="">查看详情</el-button></div>-->
                         </div>
                     </el-card>
                 </el-col>
@@ -73,8 +72,7 @@ export default {
             }).then(res => {
                 this.tableData = res.data.records
                 this.total = res.data.total
-                console.log(res.data)
-
+                console.log(this.user)
             })
         },
         load1() {
@@ -89,8 +87,6 @@ export default {
             }).then(res => {
                 this.tableData = res.data.records
                 this.total = res.data.total
-                console.log(res.data)
-
             })
         },
         load2() {
@@ -105,7 +101,6 @@ export default {
             }).then(res => {
                 this.tableData = res.data.records
                 this.total = res.data.total
-                console.log(res.data)
 
             })
         },
@@ -121,7 +116,6 @@ export default {
             }).then(res => {
                 this.tableData = res.data.records
                 this.total = res.data.total
-                console.log(res.data)
 
             })
         },
@@ -137,7 +131,6 @@ export default {
             }).then(res => {
                 this.tableData = res.data.records
                 this.total = res.data.total
-                console.log(res.data)
 
             })
         },
@@ -153,18 +146,21 @@ export default {
             }).then(res => {
                 this.tableData = res.data.records
                 this.total = res.data.total
-                console.log(res.data)
 
             })
         },
         buyInsurance(insuranceId){
-            this.request.post('/orders/' + insuranceId ).then(res => {
-                if (res.code === '200') {
-                    this.$message.success("已加入订单，请前往支付")
-                }else {
-                    this.$message.error(res.msg)
-                }
-            })
+            if (this.user.trueName === null || this.user.trueId === null || this.user.trueName === "" || this.user.trueId === "") {
+                this.$message.error("请先前往实名")
+            }else {
+                this.request.post('/orders/' + insuranceId).then(res => {
+                    if (res.code === '200') {
+                        this.$message.success("已加入订单，请前往支付")
+                    } else {
+                        this.$message.error(res.msg)
+                    }
+                })
+            }
         },
         reset(){
             this.name = ""

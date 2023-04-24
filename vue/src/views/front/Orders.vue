@@ -22,7 +22,10 @@
                         <div style="float: left; width: 260px;height: 260px">
                             <img :src="item.img" alt="" style="width: 95%;">
                         </div>
-                        <div style="float: left; margin-left: 200px;margin-top: 50px" >
+                        <div style="float: left; margin-left: 10px;" >
+                            <span style="color: #8c939d;font-size: 10px">订单号：{{ item.no }}</span>
+                        </div>
+                        <div style="float: left; margin-left: 10px;margin-top: 80px" >
                             <span style="font-size: 25px">{{ item.name }}</span>
                         </div>
                         <div style="float: right; margin-top: 150px;">
@@ -32,14 +35,57 @@
                             <span style="font-size: 25px; color: red">￥ {{ item.total }}</span>
                         </div>
                         <div style="text-align: right; margin-top: 190px; margin-right: 30px">
+                            <a style="margin-right: 20px; font-size: 12px; cursor: pointer" @click="order(item)">订单详情</a>
+                            <a style="margin-right: 20px; font-size: 12px; cursor: pointer" @click="del(item.id)" v-if="item.state === '待支付'">取消订单</a>
                             <el-button type="primary" style="border-radius: 20px; font-size: 17px; width: 80px; height: 40px" @click="payInsurance(item)" v-if="item.state === '待支付'">支 付</el-button>
+                            <a style="margin-right: 20px; font-size: 12px; cursor: pointer" @click="del(item.id)" v-if="item.state === '已支付'">删除订单</a>
                             <el-button type="danger" style="border-radius: 20px; font-size: 17px; width: 80px; height: 40px" @click="returnPay(item)" v-if="item.state === '已支付'">退款</el-button>
-                            <el-button type="warning" style="border-radius: 20px; font-size: 17px; width: 100px; height: 40px" @click="payInsurance(item)" v-if="item.state === '已退款'">重新购买</el-button>
+                            <a style="margin-right: 20px; font-size: 13px; cursor: pointer" @click="del(item.id)" v-if="item.state === '已退款'">删除订单</a>
                         </div>
                     </el-card>
                 </el-col>
             </el-row>
         </div>
+
+        <el-dialog title="订单详情" :visible.sync="dialogFormVisible" width="30%">
+            <el-form label-width="100px" size="small">
+                <el-form-item label="订单号 ">
+                    <a>{{ form.no }}</a>
+                </el-form-item>
+                <el-form-item label="购险人  ">
+                    <a>{{ form.username }}</a>
+                </el-form-item>
+                <el-form-item label="名称  ">
+                    <a>{{ form.name }}</a>
+                </el-form-item>
+                <el-form-item label="图片 ">
+                    <div style="float: left; width: 150px;height: 150px">
+                        <img :src="form.img" alt="" style="width: 95%;">
+                    </div>
+                </el-form-item>
+                <el-form-item label="下单时间  ">
+                    <a>{{ form.time }}</a>
+                </el-form-item>
+                <el-form-item label="支付状态  ">
+                    <a>{{ form.state }}</a>
+                </el-form-item>
+                <el-form-item label="订单总价  ">
+                    <a>{{ form.total }}</a>
+                </el-form-item>
+                <el-form-item label="支付时间  ">
+                    <a>{{ form.paymentTime }}</a>
+                </el-form-item>
+                <el-form-item label="支付宝流水号  ">
+                    <a>{{ form.alipayNo }}</a>
+                </el-form-item>
+                <el-form-item label="退款时间  ">
+                    <a>{{ form.returnTime }}</a>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button style="height: 35px" @click="dialogFormVisible = false">好 的</el-button>
+            </div>
+        </el-dialog>
 <!--        <el-table :data="tableData"  :header-cell-class-name="'headerBg'" size="medium" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="no" label="订单号" width="120"></el-table-column>
@@ -97,7 +143,9 @@ export default {
     name: "Orders",
     data() {
         return {
+            dialogFormVisible: false,
             tableData: [],
+            form: [],
             name: '',
             types: '',
             price: null,
@@ -137,10 +185,12 @@ export default {
             }).then(res => {
                 this.tableData = res.data.records
                 this.total = res.data.total
-
             })
         },
-
+        order(item){
+            this.form = item
+            this.dialogFormVisible = true
+        },
         reset(){
             this.name = ""
             this.types = ""
@@ -150,7 +200,7 @@ export default {
         del(id) {
             this.request.delete("/orders/" + id).then(res => {
                 if (res.code === '200') {
-                    this.$message.success("删除成功")
+                    this.$message.success("取消成功")
                     this.load()
                 } else {
                     this.$message.error("删除失败")
@@ -173,17 +223,14 @@ export default {
             })
         },
         handleSizeChange(pageSize) {
-            console.log(pageSize)
             this.pageSize = pageSize
             this.load()
         },
         handleCurrentChange(pageNum) {
-            console.log(pageNum)
             this.pageNum = pageNum
             this.load()
         },
         handleSelectionChange(val) {
-            console.log(val)
             this.multipleSelection = val
         },
     }

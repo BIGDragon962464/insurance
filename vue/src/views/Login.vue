@@ -100,28 +100,18 @@ export default {
       pass: {},
     }
   },
-  /*mounted(){
-      this.identifyCode = ''
-      this.makeCode(this.identifyCodes, 4)
-  },*/
   methods: {
     router() {
       return router
     },
     login() {
-      /*if (this.code !== this.identifyCode.toLowerCase()){
-          this.$message({
-              type: "error",
-              message: "验证码错误"
-          })
-          return;
-      }*/
       this.$refs['userForm'].validate((valid) => {
         if (valid) {  // 表单校验合法
           this.request.post("/user/login", this.user).then(res => {
             if(res.code === '200') {
               localStorage.setItem("user",JSON.stringify(res.data)) //存储用户信息到浏览器
               localStorage.setItem("menus",JSON.stringify(res.data.menus))
+                console.log(res.data)
               //动态设置当前用户路由
               setRoutes()
               this.$message.success("登录成功！")

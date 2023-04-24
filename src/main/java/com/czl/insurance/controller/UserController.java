@@ -219,6 +219,8 @@ public class UserController {
         writer.addHeaderAlias("address", "地址");
         writer.addHeaderAlias("createTime", "创建时间");
         writer.addHeaderAlias("avatarUrl", "头像");
+        writer.addHeaderAlias("trueName", "真实姓名");
+        writer.addHeaderAlias("trueId", "身份证号");
 
         // 一次性写出list内的对象到excel，使用默认样式，强制输出标题
         writer.write(list, true);
@@ -258,6 +260,8 @@ public class UserController {
             user.setPhone(row.get(5).toString());
             user.setAddress(row.get(6).toString());
             user.setAvatarUrl(row.get(7).toString());
+            user.setTrueName(row.get(8).toString());
+            user.setTrueId(row.get(9).toString());
             users.add(user);
         }
 
