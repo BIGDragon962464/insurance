@@ -69,7 +69,6 @@
          </el-dialog>
      </div>
 </template>
-
 <script>
 import router, {setRoutes} from "@/router";
 import identify from '../components/identify.vue'

@@ -133,7 +133,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
+.dialog{
+    border-radius: 10px
+}
 </style>
 
 

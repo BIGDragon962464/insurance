@@ -68,6 +68,7 @@ public class OrdersController {
         Orders orders = new Orders();
         orders.setName(insurance.getName());
         orders.setImg(insurance.getImg());
+        orders.setType(insurance.getTypes());
         orders.setNo(DateUtil.format(new Date(),"yyyyMMdd") + System.currentTimeMillis());
         orders.setTime(DateUtil.now());
         orders.setUserId(userId);
@@ -102,6 +103,7 @@ public class OrdersController {
     @GetMapping("/page")
     public Result findPage(@RequestParam(defaultValue = "") String username,
                            @RequestParam(defaultValue = "") String name,
+                           @RequestParam(defaultValue = "") String state,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
@@ -116,17 +118,22 @@ public class OrdersController {
         if (!"".equals(name)) {
             queryWrapper.like("name", name);
         }
+        if (!"".equals(state)) {
+            queryWrapper.like("state", state);
+        }
         return Result.success(ordersService.page(new Page<>(pageNum, pageSize),queryWrapper));
     }
 
 
     @GetMapping("/getOrderInsurance")
     public Result getOrderInsurance(@RequestParam(defaultValue = "") String username,
-                                    @RequestParam(defaultValue = "") String state){
+                                    @RequestParam(defaultValue = "") String state,
+                                    @RequestParam(defaultValue = "") String type){
         QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
         if (!"".equals(username)) {
             queryWrapper.eq("state","已支付");
             queryWrapper.eq("username", username);
+            queryWrapper.eq("type", type);
         }
         return Result.success(ordersMapper.selectList(queryWrapper));
     }

@@ -75,6 +75,10 @@ public class Orders implements Serializable {
        * 订单总价
        */
       private String img;
-    
+
+      /**
+       * 保险类型
+       */
+      private String type;
 
 }

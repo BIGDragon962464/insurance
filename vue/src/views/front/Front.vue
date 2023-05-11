@@ -14,6 +14,14 @@
                       <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal" router>
                           <el-menu-item index="/front/home">首页</el-menu-item>
                           <el-menu-item index="/front/insurance">产品信息</el-menu-item>
+                          <el-submenu index="/front/insurance">
+                              <template slot="title">产品分类</template>
+                              <el-menu-item index="/front/renshen">人身意外险</el-menu-item>
+                              <el-menu-item index="/front/car">机动车辆险</el-menu-item>
+                              <el-menu-item index="/front/yiliao">医疗养老险</el-menu-item>
+                              <el-menu-item index="/front/zeren">工伤责任险</el-menu-item>
+                              <el-menu-item index="/front/caichan">财产保障险</el-menu-item>
+                          </el-submenu>
                           <el-menu-item index="/front/order">订单管理</el-menu-item>
                           <el-menu-item index="/front/claims">申请理赔</el-menu-item>
                           <el-menu-item index="/front/about">关于我们</el-menu-item>
@@ -45,11 +53,15 @@
                   </div>
               </div>
           </el-header>
+
+          <!--     主体     -->
           <el-main>
               <div style="width: 1200px; height: 100vh; margin: 0 auto">
                   <router-view />
               </div>
           </el-main>
+
+          <!--     底部     -->
           <el-footer style="background-color: #b20404; width: 100%; height: 130px">
               <div style="text-align: center; color: white; font-size: 18px; width: 100% ; height: 100px; margin-top: 30px">
                   <a>基于Spring Boot的保险业务管理系统设计与实现</a>

@@ -70,7 +70,7 @@
           :total="total">
       </el-pagination>
     </div>
-    <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="30%">
+    <el-dialog title="保险信息" :visible.sync="dialogFormVisible" width="30%">
       <el-form label-width="80px" size="small">
         <el-form-item label="保险名称">
           <el-input v-model="form.name" auto-complete="off"></el-input>
@@ -91,6 +91,28 @@
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="form.description" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="特色">
+            <el-upload
+                    class="avatar-uploader"
+                    :action="'http://' + serverIp + ':8088/file/upload'"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess1"
+            >
+                <img v-if="form. characteristic" :src="form.characteristic" class="img">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </el-form-item>
+        <el-form-item label="理赔流程">
+            <el-upload
+                    class="avatar-uploader"
+                    :action="'http://' + serverIp + ':8088/file/upload'"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess2"
+            >
+                <img v-if="form. claims" :src="form.claims" class="img">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
         </el-form-item>
         <el-form-item label="保险种类">
           <el-select clearable v-model="form.types" placeholder="请选择" style="width: 100%">
@@ -248,6 +270,12 @@ export default {
     },
     handleAvatarSuccess(res) {
       this.form.img = res
+    },
+    handleAvatarSuccess1(res) {
+        this.form.characteristic = res
+    },
+    handleAvatarSuccess2(res) {
+        this.form.claims = res
     },
     lookInsurance (){
         this.request.get('insurance/findInsurance/'  + this.user.id ).then(r => {

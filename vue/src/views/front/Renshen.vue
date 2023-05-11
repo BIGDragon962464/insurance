@@ -1,18 +1,5 @@
 <template>
     <div>
-        <img src="https://www.chinalife.com.cn/chinalife/resource/cms/2021/12/img_pc_site/2021121315300654277.jpg" alt="" style="width: 100%">
-
-        <div style="margin-left: 100px; margin-top: 10px;">
-            <el-card style="border-radius: 15px;height: 120px; width: 1000px;">
-                    <div style="margin-top: 22px; margin-left: 30px; font-size: 22px; float:left;">按险种：</div>
-                    <el-button class="typesButton" :plain="true" @click="load">全部</el-button>
-                    <el-button class="typesButton" :plain="true" @click="load1">人身意外险</el-button>
-                    <el-button class="typesButton" :plain="true" @click="load2">机动车辆险</el-button>
-                    <el-button class="typesButton" :plain="true" @click="load3">医疗养老险</el-button>
-                    <el-button class="typesButton" :plain="true" @click="load4">工伤责任险</el-button>
-                    <el-button class="typesButton" :plain="true" @click="load5">财产保障险</el-button>
-            </el-card>
-        </div>
         <div style="margin-left: 100px;margin-top: 20px">
             <el-row :gutter="5">
                 <el-col :span="24" v-for="item in tableData" :key="item.id" style="margin-bottom: 20px">
@@ -96,20 +83,6 @@ export default {
     },
     methods: {
         load() {
-            this.request.get("/insurance/page1", {
-                params: {
-                    pageNum: this.pageNum,
-                    pageSize: this.pageSize,
-                    name: this.name,
-                    price: this.price,
-                    types: this.types,
-                }
-            }).then(res => {
-                this.tableData = res.data.records
-                this.total = res.data.total
-            })
-        },
-        load1() {
             this.request.get("/insurance/renshen", {
                 params: {
                     pageNum: this.pageNum,
@@ -117,66 +90,6 @@ export default {
                 }
             }).then(res => {
                 this.tableData = res.data.records
-            })
-        },
-        load2() {
-            this.request.get("/insurance/page1", {
-                params: {
-                    pageNum: this.pageNum,
-                    pageSize: this.pageSize,
-                    name: this.name,
-                    price: this.price,
-                    types: '机动车辆险',
-                }
-            }).then(res => {
-                this.tableData = res.data.records
-                this.total = res.data.total
-
-            })
-        },
-        load3() {
-            this.request.get("/insurance/page1", {
-                params: {
-                    pageNum: this.pageNum,
-                    pageSize: this.pageSize,
-                    name: this.name,
-                    price: this.price,
-                    types: '医疗养老险',
-                }
-            }).then(res => {
-                this.tableData = res.data.records
-                this.total = res.data.total
-
-            })
-        },
-        load4() {
-            this.request.get("/insurance/page1", {
-                params: {
-                    pageNum: this.pageNum,
-                    pageSize: this.pageSize,
-                    name: this.name,
-                    price: this.price,
-                    types: '工伤责任险',
-                }
-            }).then(res => {
-                this.tableData = res.data.records
-                this.total = res.data.total
-
-            })
-        },
-        load5() {
-            this.request.get("/insurance/page1", {
-                params: {
-                    pageNum: this.pageNum,
-                    pageSize: this.pageSize,
-                    name: this.name,
-                    price: this.price,
-                    types: '财产保障险',
-                }
-            }).then(res => {
-                this.tableData = res.data.records
-                this.total = res.data.total
-
             })
         },
         buyInsurance(insuranceId){
@@ -202,18 +115,8 @@ export default {
             this.price = ""
             this.load()
         },
-        handleSizeChange(pageSize) {
-            console.log(pageSize)
-            this.pageSize = pageSize
-            this.load()
-        },
-        handleCurrentChange(pageNum) {
-            console.log(pageNum)
-            this.pageNum = pageNum
-            this.load()
-        },
         open(item){
-          this.dialogFormVisible = true
+            this.dialogFormVisible = true
             this.form = item
         },
         handleClick(){

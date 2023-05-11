@@ -53,6 +53,21 @@ public class Insurance implements Serializable {
      */
       private String types;
 
+      /**
+       * 保险特色
+       */
+      private String characteristic;
+
+      /**
+       * 理赔流程
+       */
+      private String claims;
+
+      /**
+       * 保险期限
+       */
+      private String time;
+
       private String description;
 
       @TableField(exist = false)

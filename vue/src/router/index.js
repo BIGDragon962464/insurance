@@ -66,6 +66,31 @@ const routes = [
         name: 'Order',
         component: () => import('../views/front/Orders.vue')
       },
+      {
+        path: 'renshen',
+        name: 'Renshen',
+        component: () => import('../views/front/Renshen.vue')
+      },
+      {
+        path: 'caichan',
+        name: 'Caichan',
+        component: () => import('../views/front/Caichan.vue')
+      },
+      {
+        path: 'car',
+        name: 'Car',
+        component: () => import('../views/front/Car.vue')
+      },
+      {
+        path: 'zeren',
+        name: 'Zeren',
+        component: () => import('../views/front/Zeren.vue')
+      },
+      {
+        path: 'yiliao',
+        name: 'Yiliao',
+        component: () => import('../views/front/Yiliao.vue')
+      },
     ]
   },
 ]

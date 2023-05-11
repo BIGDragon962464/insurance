@@ -107,6 +107,51 @@ public class InsuranceController {
         return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
     }
 
+    @GetMapping("/renshen")
+    public Result findRenshen(@RequestParam Integer pageNum,
+                            @RequestParam Integer pageSize) {
+        QueryWrapper<Insurance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.like("types","人身意外险");
+        return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
+    @GetMapping("/yiliao")
+    public Result findYiliao(@RequestParam Integer pageNum,
+                              @RequestParam Integer pageSize) {
+        QueryWrapper<Insurance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.like("types","医疗养老险");
+        return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
+    @GetMapping("/car")
+    public Result findCar(@RequestParam Integer pageNum,
+                              @RequestParam Integer pageSize) {
+        QueryWrapper<Insurance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.like("types","机动车辆险");
+        return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
+    @GetMapping("/zeren")
+    public Result findZeren(@RequestParam Integer pageNum,
+                              @RequestParam Integer pageSize) {
+        QueryWrapper<Insurance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.like("types","工伤责任险");
+        return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
+    @GetMapping("/caichan")
+    public Result findCaichan(@RequestParam Integer pageNum,
+                              @RequestParam Integer pageSize) {
+        QueryWrapper<Insurance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.like("types","财产保障险");
+        return Result.success(insuranceService.page(new Page<>(pageNum, pageSize),queryWrapper));
+    }
+
 
 }
 
