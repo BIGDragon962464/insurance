@@ -55,7 +55,7 @@
           </el-header>
 
           <!--     主体     -->
-          <el-main>
+          <el-main class="main">
               <div style="width: 1200px; height: 100vh; margin: 0 auto">
                   <router-view />
               </div>
@@ -112,5 +112,10 @@ export default {
 <style>
 .pointer{
   cursor: pointer;
+}
+.main{
+    background-image: url(../../assets/backgroundHome.jpg);
+    background-size: 100%;
+    background-attachment: fixed;
 }
 </style>
