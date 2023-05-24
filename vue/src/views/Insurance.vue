@@ -30,7 +30,11 @@
           　<img style="width: 74px;height: 74px" :src="scope.row.img" class="img"/>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
+        <el-table-column prop="description" label="内容">
+            <template v-slot="scope">
+                <el-button type="primary" @click="view(scope.row.description)">查看富文本内容</el-button>
+            </template>
+        </el-table-column>
       <el-table-column prop="price" label="保险价格" width="150"></el-table-column>
       <el-table-column prop="types" label="保险类型" >
         <template slot-scope="scope" >
@@ -90,7 +94,7 @@
           <el-input v-model="form.price" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="form.description" auto-complete="off"></el-input>
+            <div id="richText"></div>
         </el-form-item>
         <el-form-item label="特色">
             <el-upload
@@ -125,12 +129,19 @@
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
+      <el-dialog title="富文本内容" :visible.sync="dialogFormVisible1" width="60%">
+          <el-card>
+              <div v-html="description"></div>
+          </el-card>
+      </el-dialog>
   </div>
 </template>
 
 <script>
 import insurance from "@/views/Insurance.vue";
 import {serverIp} from "../../public/config";
+import E from "wangeditor";
+let editor;
 
 export default {
   name: "Insurance",
@@ -144,6 +155,7 @@ export default {
       price: null,
       multipleSelection: [],
       dialogFormVisible: false,
+      dialogFormVisible1: false,
       pageNum: 1,
       pageSize: 5,
       total: 0,
@@ -151,12 +163,17 @@ export default {
       insurance: [],
       vis: false,
       findInsurance:[],
+        description: '',
     }
   },
   created() {
     this.load()
   },
   methods: {
+      view(description){
+          this.description = description
+          this.dialogFormVisible1 = true
+      },
     load() {
       this.request.get("/insurance/page", {
         params: {
@@ -171,12 +188,29 @@ export default {
       })
     },
 
-    handleAdd(){
-      this.dialogFormVisible = true
-      this.type();
-      this.form = {}
-    },
+      handleAdd(){
+          this.dialogFormVisible = true
+          this.form = {img: ''}
+          this.$nextTick(() => {
+              if (!editor){
+                  editor = new E("#richText")
+                  editor.config.uploadImgServer = `http://${serverIp}:8088/file/uploadImg`
+                  editor.config.uploadFileName = 'file'
+                  editor.create()
+              }
+              editor.txt.html("")     //清除内容
+              if (this.$refs.img){
+                  this.$refs.img.clearFiles();
+              }
+              if (this.$refs.file){
+                  this.$refs.file.clearFiles();
+              }
+          })
+      },
     save(){
+      const description = editor.txt.html()
+      console.log(description)
+      this.form.content = description
       this.request.post("/insurance",this.form).then(res => {
         if (res.code === '200'){
           this.$message.success("保存成功！")
@@ -200,18 +234,25 @@ export default {
             }
         })
     },
-    handleEdit(row){
-      //this.form = row
-      this.form = Object.assign({},row) // 将row拷贝到空对象中 解决没点确定数据改变的问题
-      this.dialogFormVisible = true
-    },
-    /*beforeAvatarUpload(res) {
-      const isLt2M = res.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isLt2M;
-    },*/
+      handleEdit(row){
+          this.form = Object.assign({},row) // 将row拷贝到空对象中 解决没点确定数据改变的问题
+          this.dialogFormVisible = true
+          this.$nextTick(() => {
+              if (!editor){
+                  editor = new E("#richText")
+                  editor.config.uploadImgServer = `http://${serverIp}:8088/file/uploadImg`
+                  editor.config.uploadFileName = 'file'
+                  editor.create()
+              }
+              editor.txt.html(this.form.description)
+              if (this.$refs.img){
+                  this.$refs.img.clearFiles();
+              }
+              if (this.$refs.file){
+                  this.$refs.file.clearFiles();
+              }
+          })
+      },
     changeEnable(row) {
       this.request.post("/insurance/update", row).then(res => {
         if (res.code === '200') {
