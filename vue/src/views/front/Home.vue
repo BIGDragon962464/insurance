@@ -226,7 +226,7 @@ export default {
 .why-choose-textbox span {
     font-size: 14px;
     opacity: .8;
-    color: #7a7a7a;
+    color: #ffffff;
     letter-spacing: 1.75px;
 }
 .why-choose-textbox h4 {
